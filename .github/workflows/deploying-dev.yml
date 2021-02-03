@@ -27,7 +27,7 @@ jobs:
 
       - name: Build, Push image to Github Container Registry
         env:
-          DOCKER_REGISTRY: ghcr.io/Makeus-GoGo
+          DOCKER_REGISTRY: ghcr.io/makeus-gogo
           DOCKER_REPOSITORY: gogo-backend
           IMAGE_TAG: ${{ steps.docker-image-version.outputs.version }}
         run: |
