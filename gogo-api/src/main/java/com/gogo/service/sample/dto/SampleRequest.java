@@ -12,4 +12,8 @@ public class SampleRequest {
     @NotBlank
     private String sample;
 
+    public SampleRequest(@NotBlank String sample) {
+        this.sample = sample;
+    }
+
 }
