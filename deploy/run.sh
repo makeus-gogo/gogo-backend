@@ -2,6 +2,8 @@
 
 DOCKER_APP_NAME=gogo-api
 
+cat /GIT-TOKEN.txt | docker login ghcr.io -u USERNAME --password-stdin
+
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
 
 if [ -z "$EXIST_BLUE" ]; then
