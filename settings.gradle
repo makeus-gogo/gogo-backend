@@ -1,0 +1,4 @@
+rootProject.name = 'gogo'
+include 'gogo-domain'
+include 'gogo-api'
+
