@@ -38,3 +38,5 @@ out/
 .vscode/
 
 generated/
+
+application-google.yml
