@@ -7,6 +7,7 @@ import com.gogo.external.google.dto.response.GoogleAccessTokenResponse;
 import com.gogo.external.google.dto.response.GoogleUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,6 +29,8 @@ public class WebClientGoogleApiCallerImpl implements GoogleApiCaller {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .body(Mono.just(createGoogleAccessTokenRequest(code, redirectUri)), GoogleAccessTokenRequest.class)
             .retrieve()
+            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(IllegalArgumentException::new))
+            .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(IllegalStateException::new))
             .bodyToMono(GoogleAccessTokenResponse.class)
             .block();
     }
@@ -48,6 +51,8 @@ public class WebClientGoogleApiCallerImpl implements GoogleApiCaller {
             .uri(googleUserInfoComponent.getUrl())
             .headers(headers -> headers.setBearerAuth(accessToken))
             .retrieve()
+            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(IllegalArgumentException::new))
+            .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(IllegalStateException::new))
             .bodyToMono(GoogleUserInfoResponse.class)
             .block();
     }
