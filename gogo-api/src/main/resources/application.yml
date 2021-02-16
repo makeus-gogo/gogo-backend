@@ -5,4 +5,5 @@ spring:
         active: local
         include:
             - domain
+            - thirdparty
             - jwt

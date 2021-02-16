@@ -34,8 +34,9 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-### VS Code ###
 .vscode/
 
 generated/
+
+application-thirdparty.yml
 application-jwt.yml

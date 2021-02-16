@@ -11,6 +11,30 @@ jobs:
       - name: checkout@v2
         uses: actions/checkout@v2
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create thirdparty secret properties
+        env:
+          KAKAO_AUTH_CLIENT_ID: ${{secrets.KAKAO_AUTH_CLIENT_ID}}
+          KAKAO_AUTH_CLIENT_SECRET: ${{secrets.KAKAO_AUTH_CLIENT_SECRET}}
+          KAKAO_AUTH_GRANT_TYPE: ${{secrets.KAKAO_AUTH_GRANT_TYPE}}
+          KAKO_AUTH_URL: ${{secrets.KAKAO_AUTH_URL}}
+          KAKAO_PROFILE_URL: ${{secrets.KAKAO_PROFILE_URL}}
+
+          RESOURCE_PWD: gogo-api/src/main/resources
+        run: |
+          echo -e "kakao.auth.client_id=$GOOGLE_AUTH_CLIENT_ID\nkakao.auth.client_secret=$GOOGLE_AUTH_CLIENT_SECRET\nkakao.auth.grant_type=$GOOGLE_AUTH_GRANT_TYPE\nkakao.auth.url=$GOOGLE_AUTH_URL\nkakao.profile.url=$GOOGLE_PROFILE_URL" > $RESOURCE_PWD/application-thirdparty.properties
+
+      - name: Create jwt secret properties
+        env:
+          JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+
+          RESOURCE_PWD: gogo-api/src/main/resources
+        run: |
+          echo -e "jwt.JWT_SECRET_KEY=$JWT_SECRET_KEY" > $RESOURCE_PWD/application-jwt.properties
+
+
       - name: Get Semantic Versioning
         id: docker-image-version
         run: |
