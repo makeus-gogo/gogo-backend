@@ -1,6 +1,7 @@
 package com.gogo.service.auth;
 
 import com.gogo.domain.member.MemberCreator;
+import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.external.kakao.KaKaoApiCaller;
 import com.gogo.external.kakao.dto.response.KaKaoAccessTokenResponse;
@@ -39,7 +40,7 @@ public class KaKaoAuthServiceTest {
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.SIGN_UP);
-        assertThat(response.getEmail()).isEqualTo("will.seungho@gmail.com");
+        assertThat(response.getEmail()).isEqualTo("will.seungho@kakao.com");
         assertThat(response.getName()).isEqualTo("강승호");
         assertThat(response.getToken()).isNull();
     }
@@ -47,7 +48,7 @@ public class KaKaoAuthServiceTest {
     @Test
     void 카카오_인증시_이미_존재하는_이메일의경우_로그인이_진행된다() {
         // given
-        memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
+        memberRepository.save(MemberCreator.create("will.seungho@kakao.com", MemberProvider.KAKAO));
 
         // when
         AuthResponse response = kaKaoAuthService.handleKaKaoAuthentication("code", "redirectUri");
@@ -62,12 +63,15 @@ public class KaKaoAuthServiceTest {
 
         @Override
         public KaKaoAccessTokenResponse getKaKaoAccessToken(String code, String redirectUri) {
-            return KaKaoAccessTokenResponse.testInstance("accessToken");
+            return KaKaoAccessTokenResponse.testBuilder()
+                .accessToken("accessToken")
+                .build();
+
         }
 
         @Override
         public KaKaoUserInfoResponse getKaKaoUserProfileInfo(String accessToken) {
-            return KaKaoUserInfoResponse.testInstance("will.seungho@gmail.com", "강승호");
+            return KaKaoUserInfoResponse.testInstance("will.seungho@kakao.com", "강승호");
         }
     }
 

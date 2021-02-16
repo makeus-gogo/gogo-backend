@@ -23,7 +23,7 @@ public class KaKaoAccessTokenResponse {
 
     private String scope;
 
-    @Builder
+    @Builder(builderMethodName = "testBuilder")
     public KaKaoAccessTokenResponse(String tokenType, String accessToken, String expiresIn, String refreshToken, String refreshTokenExpiresIn, String scope) {
         this.tokenType = tokenType;
         this.accessToken = accessToken;
@@ -31,12 +31,6 @@ public class KaKaoAccessTokenResponse {
         this.refreshToken = refreshToken;
         this.refreshTokenExpiresIn = refreshTokenExpiresIn;
         this.scope = scope;
-    }
-
-    public static KaKaoAccessTokenResponse testInstance(String accessToken) {
-        return KaKaoAccessTokenResponse.builder()
-            .accessToken(accessToken)
-            .build();
     }
 
 }
