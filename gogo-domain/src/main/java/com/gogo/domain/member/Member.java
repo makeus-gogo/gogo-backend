@@ -41,4 +41,15 @@ public class Member extends BaseTimeEntity {
         this.birthYear = birthYear;
     }
 
+    public static Member newInstance(String email, String name, String profileUrl, String deviceToken, int birthYear) {
+        return Member.builder()
+            .email(email)
+            .name(name)
+            .profileUrl(profileUrl)
+            .deviceToken(deviceToken)
+            .birthYear(birthYear)
+            .provider(MemberProvider.KAKAO)
+            .build();
+    }
+
 }

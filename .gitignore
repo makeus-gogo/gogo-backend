@@ -37,5 +37,6 @@ out/
 .vscode/
 
 generated/
-application-jwt.yml
+
 application-thirdparty.yml
+application-jwt.yml

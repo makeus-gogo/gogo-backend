@@ -5,5 +5,5 @@ spring:
         active: local
         include:
             - domain
-            - google
             - thirdparty
+            - jwt
