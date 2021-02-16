@@ -32,7 +32,7 @@ jobs:
 
           RESOURCE_PWD: gogo-api/src/main/resources
         run: |
-          echo -e "jwt.jwt_secret_key=$JWT_SECRET_KEY" > $RESOURCE_PWD/application-jwt.properties
+          echo -e "jwt.JWT_SECRET_KEY=$JWT_SECRET_KEY" > $RESOURCE_PWD/application-jwt.properties
 
 
       - name: Get Semantic Versioning
