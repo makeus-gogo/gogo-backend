@@ -28,27 +28,23 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
 
-    private int birthYear;
-
     @Builder
-    public Member(Long id, String email, String name, String profileUrl, String deviceToken, MemberProvider provider, int birthYear) {
+    public Member(Long id, String email, String name, String profileUrl, String deviceToken, MemberProvider provider) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.profileUrl = profileUrl;
         this.deviceToken = deviceToken;
         this.provider = provider;
-        this.birthYear = birthYear;
     }
 
-    public static Member newInstance(String email, String name, String profileUrl, String deviceToken, int birthYear) {
+    public static Member newInstance(String email, String name, String profileUrl, String deviceToken, MemberProvider provider) {
         return Member.builder()
             .email(email)
             .name(name)
             .profileUrl(profileUrl)
             .deviceToken(deviceToken)
-            .birthYear(birthYear)
-            .provider(MemberProvider.KAKAO)
+            .provider(provider)
             .build();
     }
 

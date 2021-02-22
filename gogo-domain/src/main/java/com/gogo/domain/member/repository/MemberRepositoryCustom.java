@@ -1,9 +1,10 @@
 package com.gogo.domain.member.repository;
 
 import com.gogo.domain.member.Member;
+import com.gogo.domain.member.MemberProvider;
 
 public interface MemberRepositoryCustom {
 
-    Member findMemberByEmail(String email);
+    Member findMemberByEmailAndProvider(String email, MemberProvider provider);
 
 }
