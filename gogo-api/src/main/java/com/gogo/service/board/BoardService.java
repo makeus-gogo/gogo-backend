@@ -37,14 +37,19 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardDetailInfoResponse getBoardInfo(String uuid) {
-        Board board = boardRepository.findBoardByUuid(uuid);
-        if (board == null) {
-            throw new IllegalArgumentException(String.format("해당하는 (%s)의 게시판은 존재하지 않습니다", uuid));
-        }
+        Board board = findBoardByUuid(boardRepository, uuid);
         List<String> hashTags = hashTagRepository.getAllHashTagByBoardId(board.getId()).stream()
             .map(HashTag::getTag)
             .collect(Collectors.toList());
         return BoardDetailInfoResponse.of(board, hashTags);
+    }
+
+    private Board findBoardByUuid(BoardRepository boardRepository, String uuid) {
+        Board board = boardRepository.findBoardByUuid(uuid);
+        if (board == null) {
+            throw new IllegalArgumentException(String.format("해당하는 (%s)의 게시판은 존재하지 않습니다", uuid));
+        }
+        return board;
     }
 
 }

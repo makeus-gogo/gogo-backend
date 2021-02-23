@@ -6,6 +6,9 @@ import com.gogo.domain.member.MemberRepository;
 import com.gogo.external.google.GoogleApiCaller;
 import com.gogo.external.google.dto.response.GoogleAccessTokenResponse;
 import com.gogo.external.google.dto.response.GoogleUserInfoResponse;
+import com.gogo.external.kakao.KaKaoApiCaller;
+import com.gogo.external.kakao.dto.response.KaKaoAccessTokenResponse;
+import com.gogo.external.kakao.dto.response.KaKaoUserInfoResponse;
 import com.gogo.service.auth.dto.response.AuthResponse;
 import com.gogo.utils.jwt.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class GoogleAuthService {
+public class AuthService {
 
     private final GoogleApiCaller googleApiCaller;
+    private final KaKaoApiCaller kaKaoApiCaller;
+
     private final MemberRepository memberRepository;
     private final TokenService tokenService;
 
@@ -27,7 +32,19 @@ public class GoogleAuthService {
 
         Member findMember = memberRepository.findMemberByEmailAndProvider(userInfoResponse.getEmail(), MemberProvider.GOOGLE);
         if (findMember == null) {
-            return AuthResponse.signUp(userInfoResponse.getEmail(), userInfoResponse.getName());
+            return AuthResponse.signUpWithGoogle(userInfoResponse.getEmail(), userInfoResponse.getName());
+        }
+        return AuthResponse.login(tokenService.encodeSignUpToken(findMember.getId()));
+    }
+
+    @Transactional(readOnly = true)
+    public AuthResponse handleKaKaoAuthentication(String code, String redirectUri) {
+        KaKaoAccessTokenResponse tokenResponse = kaKaoApiCaller.getKaKaoAccessToken(code, redirectUri);
+        KaKaoUserInfoResponse userInfoResponse = kaKaoApiCaller.getKaKaoUserProfileInfo(tokenResponse.getAccessToken());
+
+        Member findMember = memberRepository.findMemberByEmailAndProvider(userInfoResponse.getEmail(), MemberProvider.KAKAO);
+        if (findMember == null) {
+            return AuthResponse.signUpWithKaKao(userInfoResponse.getEmail(), userInfoResponse.getName());
         }
         return AuthResponse.login(tokenService.encodeSignUpToken(findMember.getId()));
     }
