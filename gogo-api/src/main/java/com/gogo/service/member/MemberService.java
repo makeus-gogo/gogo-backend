@@ -4,6 +4,7 @@ import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
+import com.gogo.service.member.dto.response.MemberInfoResponse;
 import com.gogo.utils.jwt.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,12 @@ public class MemberService {
         if (member != null) {
             throw new IllegalArgumentException(String.format("이미 존재하는 멤버 (%s) 입니다", email));
         }
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getMemberInfo(Long memberId) {
+        Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
+        return MemberInfoResponse.of(member);
     }
 
 }

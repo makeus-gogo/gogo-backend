@@ -4,6 +4,7 @@ import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
+import com.gogo.service.member.dto.response.MemberInfoResponse;
 import com.gogo.utils.StubTokenServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -137,6 +138,37 @@ public class MemberServiceTest {
         // then
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(2);
+    }
+
+    @Test
+    void 멤버_정보를_불러온다() {
+        // given
+        String email = "will.seungho@gmail.com";
+        String name = "강승호";
+        String profileUrl = "http://profile.com";
+        MemberProvider provider = MemberProvider.KAKAO;
+
+        Member member = Member.builder()
+            .email(email)
+            .name(name)
+            .profileUrl(profileUrl)
+            .provider(provider)
+            .build();
+
+        memberRepository.save(member);
+
+        // when
+        MemberInfoResponse response = memberService.getMemberInfo(member.getId());
+
+        // then
+        assertThatMemberInfoResponses(response, email, name, profileUrl, provider);
+    }
+
+    private void assertThatMemberInfoResponses(MemberInfoResponse response, String email, String name, String profileUrl, MemberProvider provider) {
+        assertThat(response.getEmail()).isEqualTo(email);
+        assertThat(response.getName()).isEqualTo(name);
+        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
+        assertThat(response.getProvider()).isEqualTo(provider);
     }
 
 }

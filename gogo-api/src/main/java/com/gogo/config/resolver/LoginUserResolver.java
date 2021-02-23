@@ -29,7 +29,7 @@ public class LoginUserResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (header == null) {
-            throw new IllegalArgumentException("토이 없습니다");
+            throw new IllegalArgumentException("토큰이 없습니다");
         }
         if (!header.startsWith(BEARER_TOKEN)) {
             throw new IllegalArgumentException(String.format("잘못된 토큰입니다 (%s)", header));
