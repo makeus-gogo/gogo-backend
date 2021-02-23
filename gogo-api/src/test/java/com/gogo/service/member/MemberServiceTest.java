@@ -4,7 +4,9 @@ import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
+import com.gogo.utils.StubTokenServiceImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,12 +22,16 @@ public class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
     private MemberService memberService;
 
     @AfterEach
     void cleanUp() {
         memberRepository.deleteAll();
+    }
+
+    @BeforeEach
+    void setUp() {
+        memberService = new MemberService(memberRepository, new StubTokenServiceImpl());
     }
 
     @Test

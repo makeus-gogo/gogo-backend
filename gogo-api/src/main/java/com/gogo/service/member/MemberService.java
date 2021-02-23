@@ -4,6 +4,7 @@ import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
+import com.gogo.utils.jwt.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final TokenService tokenService;
 
     @Transactional
-    public void createMember(CreateMemberRequest request) {
+    public String createMember(CreateMemberRequest request) {
         validateNonExistMember(request.getEmail(), request.getProvider());
-        // TODO 토큰 발행 및 반환
-        memberRepository.save(request.toEntity());
+        Member member = memberRepository.save(request.toEntity());
+        return tokenService.encodeSignUpToken(member.getId());
     }
 
     private void validateNonExistMember(String email, MemberProvider provider) {

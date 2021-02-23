@@ -1,5 +1,6 @@
 package com.gogo.controller.board;
 
+import com.gogo.config.resolver.LoginUser;
 import com.gogo.controller.ApiResponse;
 import com.gogo.service.board.BoardService;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
@@ -16,9 +17,8 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    // TODO 차후 토큰 -> memberId로 변경해야함.
     @PostMapping("/api/v1/board")
-    public ApiResponse<BoardInfoResponse> createBoard(@Valid @RequestBody CreateBoardRequest request, Long memberId) {
+    public ApiResponse<BoardInfoResponse> createBoard(@Valid @RequestBody CreateBoardRequest request, @LoginUser Long memberId) {
         return ApiResponse.of(boardService.createBoard(request, memberId));
     }
 

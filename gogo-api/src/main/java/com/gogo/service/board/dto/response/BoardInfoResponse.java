@@ -5,6 +5,7 @@ import com.gogo.domain.board.BoardType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,10 +24,15 @@ public class BoardInfoResponse {
 
     private final Long memberId;
 
+    private final LocalDateTime startDateTime;
+
+    private final LocalDateTime endDateTime;
+
     private final List<BoardContentResponse> contents = new ArrayList<>();
 
     public static BoardInfoResponse of(Board board) {
-        BoardInfoResponse response = new BoardInfoResponse(board.getUuid(), board.getTitle(), board.getDescription(), board.getType(), board.getMemberId());
+        BoardInfoResponse response = new BoardInfoResponse(board.getUuid(), board.getTitle(),
+            board.getDescription(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
         List<BoardContentResponse> contentResponses = board.getBoardContentList().stream()
             .map(BoardContentResponse::of)
             .collect(Collectors.toList());

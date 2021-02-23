@@ -7,6 +7,7 @@ import com.gogo.external.kakao.KaKaoApiCaller;
 import com.gogo.external.kakao.dto.response.KaKaoAccessTokenResponse;
 import com.gogo.external.kakao.dto.response.KaKaoUserInfoResponse;
 import com.gogo.service.auth.dto.response.AuthResponse;
+import com.gogo.utils.StubTokenServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class KaKaoAuthServiceTest {
 
     @BeforeEach
     void setUpKaKoService() {
-        kaKaoAuthService = new KaKaoAuthService(new MockKaKaoAPiCaller(), memberRepository);
+        kaKaoAuthService = new KaKaoAuthService(new MockKaKaoAPiCaller(), memberRepository, new StubTokenServiceImpl());
     }
 
     @Test

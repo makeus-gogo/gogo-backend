@@ -7,6 +7,7 @@ import com.gogo.external.google.GoogleApiCaller;
 import com.gogo.external.google.dto.response.GoogleAccessTokenResponse;
 import com.gogo.external.google.dto.response.GoogleUserInfoResponse;
 import com.gogo.service.auth.dto.response.AuthResponse;
+import com.gogo.utils.StubTokenServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class GoogleAuthServiceTest {
 
     @BeforeEach
     void setUpKaKoService() {
-        googleAuthService = new GoogleAuthService(new MockGoogleApiCaller(), memberRepository);
+        googleAuthService = new GoogleAuthService(new MockGoogleApiCaller(), memberRepository, new StubTokenServiceImpl());
     }
 
     @Test

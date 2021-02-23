@@ -39,4 +39,3 @@ out/
 generated/
 
 application-thirdparty.yml
-application-jwt.yml
