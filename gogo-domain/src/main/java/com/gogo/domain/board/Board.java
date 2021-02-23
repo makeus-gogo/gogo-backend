@@ -53,7 +53,27 @@ public class Board extends BaseTimeEntity {
         this.dateTimeInterval = DateTimeInterval.of(now, now.plusDays(7));
     }
 
-    public void addContents(List<String> contents) {
+    private static Board newInstance(Long memberId, String title, String description, String pictureUrl, BoardType type) {
+        return Board.builder()
+            .memberId(memberId)
+            .title(title)
+            .description(description)
+            .pictureUrl(pictureUrl)
+            .type(type)
+            .build();
+    }
+
+    public static Board newMultiChoiceBoard(Long memberId, String title, String description, String pictureUrl, List<String> contents) {
+        Board board = Board.newInstance(memberId, title, description, pictureUrl, BoardType.MULTI_CHOICE);
+        board.addContents(contents);
+        return board;
+    }
+
+    public static Board newOXInstance(Long memberId, String title, String description, String pictureUrl) {
+        return Board.newInstance(memberId, title, description, pictureUrl, BoardType.OX);
+    }
+
+    private void addContents(List<String> contents) {
         for (String content : contents) {
             addContent(content);
         }

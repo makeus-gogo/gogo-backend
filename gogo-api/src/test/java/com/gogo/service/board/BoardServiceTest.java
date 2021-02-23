@@ -1,7 +1,6 @@
 package com.gogo.service.board;
 
 import com.gogo.domain.board.*;
-import com.gogo.service.board.dto.request.BoardContentRequest;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -38,16 +37,14 @@ public class BoardServiceTest {
         String description = "description";
         String pictureUrl = "http://pict.com";
         BoardType type = BoardType.MULTI_CHOICE;
+        List<String> contents = Arrays.asList("이게 좋을까?", "저게 좋을까?");
 
-        BoardContentRequest content1 = new BoardContentRequest("이게 좋을까요");
-        BoardContentRequest content2 = new BoardContentRequest("저게 좋을까요");
-
-        CreateBoardRequest request = CreateBoardRequest.builder()
+        CreateBoardRequest request = CreateBoardRequest.testBuilder()
             .title(title)
             .description(description)
             .pictureUrl(pictureUrl)
             .type(type)
-            .contents(Arrays.asList(content1, content2))
+            .contents(contents)
             .build();
 
         // when
@@ -63,8 +60,8 @@ public class BoardServiceTest {
 
         List<BoardContent> boardContentList = boardContentRepository.findAll();
         assertThat(boardContentList).hasSize(2);
-        assertThat(boardContentList.get(0).getContent()).isEqualTo(content1.getContent());
-        assertThat(boardContentList.get(1).getContent()).isEqualTo(content2.getContent());
+        assertThat(boardContentList.get(0).getContent()).isEqualTo(contents.get(0));
+        assertThat(boardContentList.get(1).getContent()).isEqualTo(contents.get(1));
     }
 
 }

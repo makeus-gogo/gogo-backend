@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -23,34 +21,25 @@ public class CreateBoardRequest {
 
     private String pictureUrl;
 
-    @NotNull
+    private List<String> contents;
+
     private BoardType type;
 
-    private List<BoardContentRequest> contents;
-
-    @Builder
-    public CreateBoardRequest(String title, String description, String pictureUrl, BoardType type, List<BoardContentRequest> contents) {
+    @Builder(builderMethodName = "testBuilder")
+    public CreateBoardRequest(@NotBlank String title, @NotBlank String description, String pictureUrl, List<String> contents, BoardType type) {
         this.title = title;
         this.description = description;
         this.pictureUrl = pictureUrl;
-        this.type = type;
         this.contents = contents;
+        this.type = type;
     }
 
+    // TODO 좀 더 OOP 적으로 생각
     public Board toEntity(Long memberId) {
-        Board board = Board.builder()
-            .memberId(memberId)
-            .title(title)
-            .description(description)
-            .pictureUrl(pictureUrl)
-            .type(type)
-            .build();
-
-        List<String> boardContentList = contents.stream()
-            .map(BoardContentRequest::getContent)
-            .collect(Collectors.toList());
-        board.addContents(boardContentList);
-        return board;
+        if (type.equals(BoardType.MULTI_CHOICE)) {
+            return Board.newMultiChoiceBoard(memberId, title, description, pictureUrl, contents);
+        }
+        return Board.newOXInstance(memberId, title, description, pictureUrl);
     }
 
 }

@@ -18,7 +18,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/api/v1/board")
-    public ApiResponse<BoardInfoResponse> createBoard(@Valid @RequestBody CreateBoardRequest request, @LoginUser Long memberId) {
+    public ApiResponse<BoardInfoResponse> createMultiChoiceBoard(@Valid @RequestBody CreateBoardRequest request, @LoginUser Long memberId) {
         return ApiResponse.of(boardService.createBoard(request, memberId));
     }
 
