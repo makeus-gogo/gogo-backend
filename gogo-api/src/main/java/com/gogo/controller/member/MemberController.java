@@ -1,13 +1,12 @@
 package com.gogo.controller.member;
 
-import com.gogo.config.BaseResponse;
-import com.gogo.config.BaseResponseStatus;
+import com.gogo.config.resolver.LoginUser;
+import com.gogo.controller.ApiResponse;
 import com.gogo.service.member.MemberService;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
+import com.gogo.service.member.dto.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -18,9 +17,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/api/v1/signup")
-    public BaseResponse<String> signUpMember(@Valid @RequestBody CreateMemberRequest request) {
-        memberService.createMember(request);
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, "OK");
+    public ApiResponse<String> signUpMember(@Valid @RequestBody CreateMemberRequest request) {
+        return ApiResponse.of(memberService.createMember(request));
+    }
+
+    @GetMapping("/api/v1/member")
+    public ApiResponse<MemberInfoResponse> getMemberInfo(@LoginUser Long memberId) {
+        return ApiResponse.of(memberService.getMemberInfo(memberId));
     }
 
 }

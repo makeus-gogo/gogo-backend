@@ -1,0 +1,4 @@
+# 차후 배포시 .gitignore 처리하고 github aciton secret 추가하기
+jwt:
+  secret_key: secrer#
+  issuer: gogo

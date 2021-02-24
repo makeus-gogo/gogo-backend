@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public class BoardInfoResponse {
+public class BoardDetailInfoResponse {
 
     private final String uuid;
 
@@ -30,13 +30,16 @@ public class BoardInfoResponse {
 
     private final List<BoardContentResponse> contents = new ArrayList<>();
 
-    public static BoardInfoResponse of(Board board) {
-        BoardInfoResponse response = new BoardInfoResponse(board.getUuid(), board.getTitle(),
+    private final List<String> hashTags = new ArrayList<>();
+
+    public static BoardDetailInfoResponse of(Board board, List<String> hashTags) {
+        BoardDetailInfoResponse response = new BoardDetailInfoResponse(board.getUuid(), board.getTitle(),
             board.getDescription(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
         List<BoardContentResponse> contentResponses = board.getBoardContentList().stream()
             .map(BoardContentResponse::of)
             .collect(Collectors.toList());
         response.contents.addAll(contentResponses);
+        response.hashTags.addAll(hashTags);
         return response;
     }
 
