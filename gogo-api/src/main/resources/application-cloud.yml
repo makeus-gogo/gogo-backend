@@ -1,0 +1,13 @@
+---
+spring:
+  profiles: local
+cloud:
+  aws:
+    s3:
+      bucket: gogo-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instance-profile: true

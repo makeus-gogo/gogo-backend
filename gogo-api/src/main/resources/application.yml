@@ -1,9 +1,16 @@
 server:
-    port: 8080
+  port: 8080
 spring:
-    profiles:
-        active: local
-        include:
-            - domain
-            - thirdparty
-            - jwt
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  profiles:
+    active: local
+    include:
+      - domain
+      - thirdparty
+      - jwt
+      - cloud
+      - aws
+
