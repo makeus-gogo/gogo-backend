@@ -15,19 +15,23 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Board> findAllBoards() {
-        return queryFactory.selectFrom(board)
-            .leftJoin(board.boardContentList, boardContent).fetchJoin()
-            .fetch();
-    }
-
-    @Override
-    public Board findBoardByUuid(String uuid) {
+    public Board findBoardById(Long boardId) {
         return queryFactory.selectFrom(board)
             .leftJoin(board.boardContentList, boardContent).fetchJoin()
             .where(
-                board.uuid.uuid.eq(uuid)
+                board.id.eq(boardId)
             ).fetchOne();
+    }
+
+    @Override
+    public List<Board> findBoardLessThanId(Long lastBoardId, int size) {
+        return queryFactory.selectFrom(board)
+            .where(
+                board.id.lt(lastBoardId)
+            )
+            .orderBy(board.id.desc())
+            .limit(size)
+            .fetch();
     }
 
 }

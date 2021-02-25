@@ -19,19 +19,18 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/api/v1/board")
-    public ApiResponse<BoardInfoResponse> createMultiChoiceBoard(@Valid @RequestBody CreateBoardRequest request, @LoginUser Long memberId) {
+    public ApiResponse<BoardDetailInfoResponse> createMultiChoiceBoard(@Valid @RequestBody CreateBoardRequest request, @LoginUser Long memberId) {
         return ApiResponse.of(boardService.createBoard(request, memberId));
     }
 
-    // TODO 차후 페이지네이션 등 구현해야함.
-    @GetMapping("/api/v1/board/list")
-    public ApiResponse<List<BoardInfoResponse>> getBoards() {
-        return ApiResponse.of(boardService.getBoards());
+    @GetMapping("/api/v1/board/list/{lastBoardId}")
+    public ApiResponse<List<BoardInfoResponse>> getBoards(@PathVariable Long lastBoardId, @RequestParam int size) {
+        return ApiResponse.of(boardService.getBoardsLessThanBoardId(lastBoardId, size));
     }
 
-    @GetMapping("/api/v1/board/{uuid}")
-    public ApiResponse<BoardDetailInfoResponse> getBoard(@PathVariable String uuid) {
-        return ApiResponse.of(boardService.getBoardInfo(uuid));
+    @GetMapping("/api/v1/board/{boardId}")
+    public ApiResponse<BoardDetailInfoResponse> getBoard(@PathVariable Long boardId) {
+        return ApiResponse.of(boardService.getBoardInfo(boardId));
     }
 
 }

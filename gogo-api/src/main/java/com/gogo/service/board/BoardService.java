@@ -22,34 +22,29 @@ public class BoardService {
     private final HashTagRepository hashTagRepository;
 
     @Transactional
-    public BoardInfoResponse createBoard(CreateBoardRequest request, Long memberId) {
+    public BoardDetailInfoResponse createBoard(CreateBoardRequest request, Long memberId) {
         Board board = boardRepository.save(request.toEntity(memberId));
-        hashTagRepository.saveAll(request.toHashTagEntity(board.getId(), memberId));
-        return BoardInfoResponse.of(board);
-    }
-
-    @Transactional(readOnly = true)
-    public List<BoardInfoResponse> getBoards() {
-        return boardRepository.findAllBoards().stream()
-            .map(BoardInfoResponse::of)
-            .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public BoardDetailInfoResponse getBoardInfo(String uuid) {
-        Board board = findBoardByUuid(boardRepository, uuid);
-        List<String> hashTags = hashTagRepository.getAllHashTagByBoardId(board.getId()).stream()
+        List<String> hashTags = hashTagRepository.saveAll(request.toHashTagEntity(board.getId(), memberId))
+            .stream()
             .map(HashTag::getTag)
             .collect(Collectors.toList());
         return BoardDetailInfoResponse.of(board, hashTags);
     }
 
-    private Board findBoardByUuid(BoardRepository boardRepository, String uuid) {
-        Board board = boardRepository.findBoardByUuid(uuid);
-        if (board == null) {
-            throw new IllegalArgumentException(String.format("해당하는 (%s)의 게시판은 존재하지 않습니다", uuid));
-        }
-        return board;
+    @Transactional(readOnly = true)
+    public List<BoardInfoResponse> getBoardsLessThanBoardId(Long lastBoardId, int size) {
+        return boardRepository.findBoardLessThanId(lastBoardId, size).stream()
+            .map(BoardInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BoardDetailInfoResponse getBoardInfo(Long boardId) {
+        Board board = BoardServiceUtils.findBoardById(boardRepository, boardId);
+        List<String> hashTags = hashTagRepository.getAllHashTagByBoardId(board.getId()).stream()
+            .map(HashTag::getTag)
+            .collect(Collectors.toList());
+        return BoardDetailInfoResponse.of(board, hashTags);
     }
 
 }

@@ -6,15 +6,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
 public class BoardInfoResponse {
 
-    private final String uuid;
+    private final Long id;
 
     private final String title;
 
@@ -28,16 +25,9 @@ public class BoardInfoResponse {
 
     private final LocalDateTime endDateTime;
 
-    private final List<BoardContentResponse> contents = new ArrayList<>();
-
     public static BoardInfoResponse of(Board board) {
-        BoardInfoResponse response = new BoardInfoResponse(board.getUuid(), board.getTitle(),
+        return new BoardInfoResponse(board.getId(), board.getTitle(),
             board.getDescription(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
-        List<BoardContentResponse> contentResponses = board.getBoardContentList().stream()
-            .map(BoardContentResponse::of)
-            .collect(Collectors.toList());
-        response.contents.addAll(contentResponses);
-        return response;
     }
 
 }

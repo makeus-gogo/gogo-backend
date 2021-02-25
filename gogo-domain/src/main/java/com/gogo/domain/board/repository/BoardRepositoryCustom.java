@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface BoardRepositoryCustom {
 
-    List<Board> findAllBoards();
+    Board findBoardById(Long boardId);
 
-    Board findBoardByUuid(String uuid);
+    List<Board> findBoardLessThanId(Long lastBoardId, int size);
 
 }

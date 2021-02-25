@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardDetailInfoResponse {
 
-    private final String uuid;
+    private final Long id;
 
     private final String title;
 
@@ -33,7 +33,7 @@ public class BoardDetailInfoResponse {
     private final List<String> hashTags = new ArrayList<>();
 
     public static BoardDetailInfoResponse of(Board board, List<String> hashTags) {
-        BoardDetailInfoResponse response = new BoardDetailInfoResponse(board.getUuid(), board.getTitle(),
+        BoardDetailInfoResponse response = new BoardDetailInfoResponse(board.getId(), board.getTitle(),
             board.getDescription(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
         List<BoardContentResponse> contentResponses = board.getBoardContentList().stream()
             .map(BoardContentResponse::of)
