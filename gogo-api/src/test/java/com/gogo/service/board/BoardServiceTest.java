@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,37 +83,35 @@ public class BoardServiceTest {
     }
 
     @Test
-    void 게시글을_마지막으로_본_다음_게시글부터_3개씩_불러온다() {
+    void 게시글을_마지막으로_본_다음_게시글부터_2개씩_불러온다() {
         // given
-        boardRepository.saveAll(Arrays.asList(
-            BoardCreator.create("게시글 1"),
-            BoardCreator.create("게시글 2"),
-            BoardCreator.create("게시글 3"),
-            BoardCreator.create("게시글 4"),
-            BoardCreator.create("게시글 5")
-        ));
+        Board board1 = BoardCreator.create("게시글 1");
+        Board board2 = BoardCreator.create("게시글 2");
+        Board board3 = BoardCreator.create("게시글 3");
+        boardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         // when
-        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(4L, 3);
+        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(board3.getId(), 2);
 
         // then
-        assertThat(responses).hasSize(3);
-        assertThat(responses.get(0).getTitle()).isEqualTo("게시글 3");
-        assertThat(responses.get(1).getTitle()).isEqualTo("게시글 2");
-        assertThat(responses.get(2).getTitle()).isEqualTo("게시글 1");
+        assertThat(responses).hasSize(2);
+        assertThat(responses.get(0).getTitle()).isEqualTo(board2.getTitle());
+        assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
     }
 
     @Test
     void 게시글을_불러올때_2개를_불러오는데_남은것이_1개일경우_1개를_불러온다() {
         // given
-        boardRepository.saveAll(Collections.singletonList(BoardCreator.create("게시글 1")));
+        Board board1 = BoardCreator.create("게시글 1");
+        Board board2 = BoardCreator.create("게시글 2");
+        boardRepository.saveAll(Arrays.asList(board1, board2));
 
         // when
-        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(2L, 2);
+        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(board2.getId(), 2);
 
         // then
         assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).getTitle()).isEqualTo("게시글 1");
+        assertThat(responses.get(0).getTitle()).isEqualTo(board1.getTitle());
     }
 
 }
