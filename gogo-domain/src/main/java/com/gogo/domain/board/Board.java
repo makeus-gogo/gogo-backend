@@ -2,7 +2,6 @@ package com.gogo.domain.board;
 
 import com.gogo.domain.BaseTimeEntity;
 import com.gogo.domain.common.DateTimeInterval;
-import com.gogo.domain.common.Uuid;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,9 +20,6 @@ public class Board extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Embedded
-    private Uuid uuid;
 
     private Long memberId;
 
@@ -44,7 +40,6 @@ public class Board extends BaseTimeEntity {
     @Builder
     public Board(Long memberId, String title, String description, String pictureUrl, BoardType type) {
         final LocalDateTime now = LocalDateTime.now();
-        this.uuid = Uuid.newInstance();
         this.memberId = memberId;
         this.title = title;
         this.description = description;
@@ -82,10 +77,6 @@ public class Board extends BaseTimeEntity {
     private void addContent(String content) {
         BoardContent boardContent = BoardContent.newInstance(this, content);
         this.boardContentList.add(boardContent);
-    }
-
-    public String getUuid() {
-        return this.uuid.getUuid();
     }
 
     public LocalDateTime getStartDateTime() {

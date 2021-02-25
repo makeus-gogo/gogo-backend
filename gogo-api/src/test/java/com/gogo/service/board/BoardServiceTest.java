@@ -4,12 +4,14 @@ import com.gogo.domain.board.*;
 import com.gogo.domain.hashtag.HashTag;
 import com.gogo.domain.hashtag.HashTagRepository;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
+import com.gogo.service.board.dto.response.BoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,6 +81,40 @@ public class BoardServiceTest {
         assertThat(board.getDescription()).isEqualTo(description);
         assertThat(board.getType()).isEqualTo(type);
         assertThat(board.getPictureUrl()).isEqualTo(pictureUrl);
+    }
+
+    @Test
+    void 게시글을_마지막으로_본_다음_게시글부터_3개씩_불러온다() {
+        // given
+        boardRepository.saveAll(Arrays.asList(
+            BoardCreator.create("게시글 1"),
+            BoardCreator.create("게시글 2"),
+            BoardCreator.create("게시글 3"),
+            BoardCreator.create("게시글 4"),
+            BoardCreator.create("게시글 5")
+        ));
+
+        // when
+        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(4L, 3);
+
+        // then
+        assertThat(responses).hasSize(3);
+        assertThat(responses.get(0).getTitle()).isEqualTo("게시글 3");
+        assertThat(responses.get(1).getTitle()).isEqualTo("게시글 2");
+        assertThat(responses.get(2).getTitle()).isEqualTo("게시글 1");
+    }
+
+    @Test
+    void 게시글을_불러올때_2개를_불러오는데_남은것이_1개일경우_1개를_불러온다() {
+        // given
+        boardRepository.saveAll(Collections.singletonList(BoardCreator.create("게시글 1")));
+
+        // when
+        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(2L, 2);
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0).getTitle()).isEqualTo("게시글 1");
     }
 
 }

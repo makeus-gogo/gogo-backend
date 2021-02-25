@@ -85,9 +85,7 @@ public class MemberServiceTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            memberService.createMember(request);
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> memberService.createMember(request)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentInfoResponse {
     private final Long id;
-    private final String uuid;
+    private final Long boardId;
     private final Long memberId;
     private final String description;
     public static CommentInfoResponse of(Comment comment){
-        return new CommentInfoResponse(comment.getId(), comment.getUuid(), comment.getMemberId(),comment.getDescription());
+        return new CommentInfoResponse(comment.getId(), comment.getBoardId(), comment.getMemberId(),comment.getDescription());
     }
 }
