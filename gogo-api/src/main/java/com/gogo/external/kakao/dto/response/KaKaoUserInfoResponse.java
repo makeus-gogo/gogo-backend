@@ -3,10 +3,12 @@ package com.gogo.external.kakao.dto.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Getter
+@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KaKaoUserInfoResponse {
 
@@ -21,6 +23,7 @@ public class KaKaoUserInfoResponse {
 
     @ToString
     @Getter
+    @NoArgsConstructor
     private static class KaKaoAccountResponse {
 
         private String email;
@@ -34,6 +37,7 @@ public class KaKaoUserInfoResponse {
 
         @ToString
         @Getter
+        @NoArgsConstructor
         public static class KaKaoProfileResponse {
 
             private String nickname;
