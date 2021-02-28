@@ -8,6 +8,8 @@ public interface BoardRepositoryCustom {
 
     Board findBoardById(Long boardId);
 
-    List<Board> findBoardLessThanId(Long lastBoardId, int size);
+    List<Board> findBoardsOrderByIdDesc(int size);
+
+    List<Board> findBoardsLessThanOrderByIdDescLimit(Long lastBoardId, int size);
 
 }

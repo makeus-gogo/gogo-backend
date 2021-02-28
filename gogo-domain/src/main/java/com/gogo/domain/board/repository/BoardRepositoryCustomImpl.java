@@ -24,7 +24,15 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public List<Board> findBoardLessThanId(Long lastBoardId, int size) {
+    public List<Board> findBoardsOrderByIdDesc(int size) {
+        return queryFactory.selectFrom(board)
+            .orderBy(board.id.desc())
+            .limit(size)
+            .fetch();
+    }
+
+    @Override
+    public List<Board> findBoardsLessThanOrderByIdDescLimit(Long lastBoardId, int size) {
         return queryFactory.selectFrom(board)
             .where(
                 board.id.lt(lastBoardId)

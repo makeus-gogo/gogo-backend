@@ -33,7 +33,17 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardInfoResponse> getBoardsLessThanBoardId(Long lastBoardId, int size) {
-        return boardRepository.findBoardLessThanId(lastBoardId, size).stream()
+        return lastBoardId == 0 ? getLatestBoards(size) : getLatestBoardLessThanId(lastBoardId, size);
+    }
+
+    private List<BoardInfoResponse> getLatestBoards(int size) {
+        return boardRepository.findBoardsOrderByIdDesc(size).stream()
+            .map(BoardInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
+    private List<BoardInfoResponse> getLatestBoardLessThanId(Long lastBoardId, int size) {
+        return boardRepository.findBoardsLessThanOrderByIdDescLimit(lastBoardId, size).stream()
             .map(BoardInfoResponse::of)
             .collect(Collectors.toList());
     }
