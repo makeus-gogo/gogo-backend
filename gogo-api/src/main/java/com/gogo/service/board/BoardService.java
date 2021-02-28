@@ -2,11 +2,10 @@ package com.gogo.service.board;
 
 import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardRepository;
-import com.gogo.domain.hashtag.HashTag;
-import com.gogo.domain.hashtag.HashTagRepository;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import com.gogo.service.board.dto.response.BoardDetailInfoResponse;
 import com.gogo.service.board.dto.response.BoardInfoResponse;
+import com.gogo.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +18,12 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final HashTagRepository hashTagRepository;
+    private final HashTagService hashTagService;
 
     @Transactional
     public BoardDetailInfoResponse createBoard(CreateBoardRequest request, Long memberId) {
         Board board = boardRepository.save(request.toEntity(memberId));
-        List<String> hashTags = hashTagRepository.saveAll(request.toHashTagEntity(board.getId(), memberId))
-            .stream()
-            .map(HashTag::getTag)
-            .collect(Collectors.toList());
+        List<String> hashTags = hashTagService.addHashTags(request.getHashTags(), board.getId(), memberId);
         return BoardDetailInfoResponse.of(board, hashTags);
     }
 
@@ -51,9 +47,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardDetailInfoResponse getBoardInfo(Long boardId) {
         Board board = BoardServiceUtils.findBoardById(boardRepository, boardId);
-        List<String> hashTags = hashTagRepository.getAllHashTagByBoardId(board.getId()).stream()
-            .map(HashTag::getTag)
-            .collect(Collectors.toList());
+        List<String> hashTags = hashTagService.retrieveHashTagsInBoard(boardId);
         return BoardDetailInfoResponse.of(board, hashTags);
     }
 

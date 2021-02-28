@@ -2,7 +2,6 @@ package com.gogo.service.board.dto.request;
 
 import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardType;
-import com.gogo.domain.hashtag.HashTag;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -47,12 +45,6 @@ public class CreateBoardRequest {
             return Board.newMultiChoiceBoard(memberId, title, description, pictureUrl, contents);
         }
         return Board.newOXInstance(memberId, title, description, pictureUrl);
-    }
-
-    public List<HashTag> toHashTagEntity(Long boardId, Long memberId) {
-        return this.hashTags.stream()
-            .map(hashTag -> HashTag.of(boardId, memberId, hashTag))
-            .collect(Collectors.toList());
     }
 
 }
