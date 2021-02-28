@@ -130,4 +130,35 @@ public class BoardServiceTest {
         assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
     }
 
+    @Test
+    void 특정_키워드가_포함된_제목을_검색한다_1() {
+        // given
+        Board board1 = BoardCreator.create("게시글 1");
+        Board board2 = BoardCreator.create("게시글 2");
+        boardRepository.saveAll(Arrays.asList(board1, board2));
+
+        // when
+        List<BoardInfoResponse> responses = boardService.searchBoardsByKeyword("게시글");
+
+        // then
+        assertThat(responses).hasSize(2);
+        assertThat(responses.get(0).getTitle()).isEqualTo(board2.getTitle());
+        assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
+    }
+
+    @Test
+    void 특정_키워드가_포함된_제목을_검색한다_2() {
+        // given
+        Board board1 = BoardCreator.create("게시글 1");
+        Board board2 = BoardCreator.create("게시글 2");
+        boardRepository.saveAll(Arrays.asList(board1, board2));
+
+        // when
+        List<BoardInfoResponse> responses = boardService.searchBoardsByKeyword("시글 1");
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0).getTitle()).isEqualTo(board1.getTitle());
+    }
+
 }

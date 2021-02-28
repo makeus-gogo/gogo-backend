@@ -33,4 +33,9 @@ public class BoardController {
         return ApiResponse.of(boardService.getBoardInfo(boardId));
     }
 
+    @GetMapping("/api/v1/board/search")
+    public ApiResponse<List<BoardInfoResponse>> searchBoardsByName(@RequestParam String keyword) {
+        return ApiResponse.of(boardService.searchBoardsByKeyword(keyword));
+    }
+
 }
