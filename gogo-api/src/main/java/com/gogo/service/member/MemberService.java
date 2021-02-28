@@ -1,7 +1,6 @@
 package com.gogo.service.member;
 
 import com.gogo.domain.member.Member;
-import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
 import com.gogo.service.member.dto.request.UpdateMemberInfoRequest;
@@ -20,16 +19,9 @@ public class MemberService {
 
     @Transactional
     public String createMember(CreateMemberRequest request) {
-        validateNonExistMember(request.getEmail(), request.getProvider());
+        MemberServiceUtils.validateNonExistMember(memberRepository, request.getEmail(), request.getProvider());
         Member member = memberRepository.save(request.toEntity());
         return tokenService.encodeSignUpToken(member.getId());
-    }
-
-    private void validateNonExistMember(String email, MemberProvider provider) {
-        Member member = memberRepository.findMemberByEmailAndProvider(email, provider);
-        if (member != null) {
-            throw new IllegalArgumentException(String.format("이미 존재하는 멤버 (%s) 입니다", email));
-        }
     }
 
     @Transactional(readOnly = true)
