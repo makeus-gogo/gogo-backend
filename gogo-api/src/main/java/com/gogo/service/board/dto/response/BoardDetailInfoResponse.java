@@ -2,6 +2,7 @@ package com.gogo.service.board.dto.response;
 
 import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardType;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardDetailInfoResponse {
 
     private final Long id;

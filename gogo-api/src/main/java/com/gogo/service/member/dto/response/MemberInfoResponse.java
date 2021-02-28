@@ -2,11 +2,14 @@ package com.gogo.service.member.dto.response;
 
 import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberInfoResponse {
 
     private final Long id;
