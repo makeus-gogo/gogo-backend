@@ -114,4 +114,20 @@ public class BoardServiceTest {
         assertThat(responses.get(0).getTitle()).isEqualTo(board1.getTitle());
     }
 
+    @Test
+    void 최초_게시물을_불러올때_가장_최신의_게시물_2개를_불러온다() {
+        // given
+        Board board1 = BoardCreator.create("게시글 1");
+        Board board2 = BoardCreator.create("게시글 2");
+        boardRepository.saveAll(Arrays.asList(board1, board2));
+
+        // when
+        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(0L, 2);
+
+        // then
+        assertThat(responses).hasSize(2);
+        assertThat(responses.get(0).getTitle()).isEqualTo(board2.getTitle());
+        assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
+    }
+
 }
