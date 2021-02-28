@@ -10,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AnswerInfoResponse {
     private final Long id;
+    private final Long boardId;
     private final Long contentId;
 
     public static AnswerInfoResponse of(Answer answer){
-        return new AnswerInfoResponse(answer.getId(), answer.getBoardContent().getId());
+        return new AnswerInfoResponse(answer.getId(), answer.getBoard().getId(),answer.getBoardContent().getId());
     }
 }

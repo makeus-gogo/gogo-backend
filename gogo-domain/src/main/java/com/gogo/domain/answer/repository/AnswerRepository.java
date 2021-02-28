@@ -1,6 +1,7 @@
 package com.gogo.domain.answer.repository;
 
 import com.gogo.domain.answer.Answer;
+import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardContent;
 import com.gogo.domain.member.Member;
 import org.springframework.data.repository.CrudRepository;
@@ -10,5 +11,6 @@ import java.util.List;
 
 @Repository
 public interface AnswerRepository extends CrudRepository<Answer,Long> {
-    List<Answer> findAllByMemberAndBoardContentAndStatus(Member member, BoardContent boardContent,String status);
+    Answer findAnswerByMemberAndBoardContentAndStatus(Member member, BoardContent boardContent,String status);
+    Answer findAnswerByMemberAndBoardAndStatus(Member member, Board board, String status);
 }

@@ -1,6 +1,7 @@
 package com.gogo.domain.answer;
 
 import com.gogo.domain.BaseTimeEntity;
+import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardContent;
 import com.gogo.domain.member.Member;
 import lombok.AccessLevel;
@@ -24,11 +25,15 @@ public class Answer extends BaseTimeEntity {
     @JoinColumn(name = "board_content_id")
     private BoardContent boardContent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     private String status = "ACTIVE";
 
-    public Answer(Member member, BoardContent boardContent) {
+    public Answer(Member member, Board board,BoardContent boardContent) {
         this.member = member;
+        this.board = board;
         this.boardContent = boardContent;
     }
 }
