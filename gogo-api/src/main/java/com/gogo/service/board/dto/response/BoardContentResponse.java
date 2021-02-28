@@ -1,11 +1,12 @@
 package com.gogo.service.board.dto.response;
 
 import com.gogo.domain.board.BoardContent;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardContentResponse {
 
     private final Long id;

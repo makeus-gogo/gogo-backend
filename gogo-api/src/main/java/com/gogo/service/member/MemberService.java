@@ -4,6 +4,7 @@ import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
+import com.gogo.service.member.dto.request.UpdateMemberInfoRequest;
 import com.gogo.service.member.dto.response.MemberInfoResponse;
 import com.gogo.utils.jwt.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,13 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfo(Long memberId) {
         Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
+        return MemberInfoResponse.of(member);
+    }
+
+    @Transactional
+    public MemberInfoResponse updateMemberInfo(UpdateMemberInfoRequest request, Long memberId) {
+        Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
+        member.updateMemberInfo(request.getName(), request.getProfileUrl());
         return MemberInfoResponse.of(member);
     }
 

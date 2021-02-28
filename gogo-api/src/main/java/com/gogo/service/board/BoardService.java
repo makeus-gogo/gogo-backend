@@ -57,4 +57,11 @@ public class BoardService {
         return BoardDetailInfoResponse.of(board, hashTags);
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardInfoResponse> searchBoardsByKeyword(String keyword) {
+        return boardRepository.findBoardsByLikeTitle(keyword).stream()
+            .map(BoardInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
 }

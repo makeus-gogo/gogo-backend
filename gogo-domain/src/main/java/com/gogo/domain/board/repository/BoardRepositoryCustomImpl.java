@@ -42,4 +42,13 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
             .fetch();
     }
 
+    @Override
+    public List<Board> findBoardsByLikeTitle(String title) {
+        return queryFactory.selectFrom(board)
+            .where(
+                board.title.contains(title)
+            ).orderBy(board.id.desc())
+            .fetch();
+    }
+
 }

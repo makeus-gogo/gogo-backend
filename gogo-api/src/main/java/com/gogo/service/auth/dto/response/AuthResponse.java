@@ -1,11 +1,12 @@
 package com.gogo.service.auth.dto.response;
 
 import com.gogo.domain.member.MemberProvider;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthResponse {
 
     private final AuthType type;
