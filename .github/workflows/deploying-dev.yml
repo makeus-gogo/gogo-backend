@@ -24,12 +24,12 @@ jobs:
           KAKAO_AUTH_CLIENT_ID: ${{secrets.KAKAO_AUTH_CLIENT_ID}}
           KAKAO_AUTH_CLIENT_SECRET: ${{secrets.KAKAO_AUTH_CLIENT_SECRET}}
           KAKAO_AUTH_GRANT_TYPE: ${{secrets.KAKAO_AUTH_GRANT_TYPE}}
-          KAKO_AUTH_URL: ${{secrets.KAKAO_AUTH_URL}}
+          KAKAO_AUTH_URL: ${{secrets.KAKAO_AUTH_URL}}
           KAKAO_PROFILE_URL: ${{secrets.KAKAO_PROFILE_URL}}
 
           RESOURCE_PWD: gogo-api/src/main/resources
         run: |
-          echo -e "google.auth.client_id=$GOOGLE_AUTH_CLIENT_ID\ngoogle.auth.client_secret=$GOOGLE_AUTH_CLIENT_SECRET\ngoogle.auth.grant_type=$GOOGLE_AUTH_GRANT_TYPE\ngoogle.auth.url=$GOOGLE_AUTH_URL\ngoogle.profile.url=$KAKAO_PROFILE_URL\nkakao.auth.client_id=$KAKAO_AUTH_CLIENT_ID\nkakao.auth.client_secret=$KAKAO_AUTH_CLIENT_SECRET\nkakao.auth.grant_type=$KAKAO_AUTH_GRANT_TYPE\nkakao.auth.url=$KAKAO_AUTH_URL\nkakao.profile.url=$KAKAO_PROFILE_URL" > $RESOURCE_PWD/application-thirdparty.properties
+          echo -e "google.auth.client_id=$GOOGLE_AUTH_CLIENT_ID\ngoogle.auth.client_secret=$GOOGLE_AUTH_CLIENT_SECRET\ngoogle.auth.grant_type=$GOOGLE_AUTH_GRANT_TYPE\ngoogle.auth.url=$GOOGLE_AUTH_URL\ngoogle.profile.url=$GOOGLE_PROFILE_URL\nkakao.auth.client_id=$KAKAO_AUTH_CLIENT_ID\nkakao.auth.client_secret=$KAKAO_AUTH_CLIENT_SECRET\nkakao.auth.grant_type=$KAKAO_AUTH_GRANT_TYPE\nkakao.auth.url=$KAKAO_AUTH_URL\nkakao.profile.url=$KAKAO_PROFILE_URL" > $RESOURCE_PWD/application-thirdparty.properties
 
       - name: Create jwt secret properties
         env:
