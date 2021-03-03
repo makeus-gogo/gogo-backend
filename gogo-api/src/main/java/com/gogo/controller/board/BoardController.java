@@ -23,7 +23,7 @@ public class BoardController {
         return ApiResponse.of(boardService.createBoard(request, memberId));
     }
 
-    @GetMapping("/api/v1/board/list/{lastBoardId}")
+    @GetMapping("/api/v1/board/list")
     public ApiResponse<List<BoardInfoResponse>> getBoards(@RequestParam Long lastBoardId, @RequestParam int size) {
         return ApiResponse.of(boardService.getBoardsLessThanBoardId(lastBoardId, size));
     }
