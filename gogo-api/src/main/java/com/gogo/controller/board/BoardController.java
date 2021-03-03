@@ -24,7 +24,7 @@ public class BoardController {
     }
 
     @GetMapping("/api/v1/board/list/{lastBoardId}")
-    public ApiResponse<List<BoardInfoResponse>> getBoards(@PathVariable Long lastBoardId, @RequestParam int size) {
+    public ApiResponse<List<BoardInfoResponse>> getBoards(@RequestParam Long lastBoardId, @RequestParam int size) {
         return ApiResponse.of(boardService.getBoardsLessThanBoardId(lastBoardId, size));
     }
 
