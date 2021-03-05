@@ -20,13 +20,13 @@ public class AuthController {
     @Operation(summary = "카카오톡 인증 요청 API", description = "로그인을 위한 토큰 혹은 회원가입을 위한 정보가 반환됩니다.")
     @GetMapping("/api/v1/auth/kakao")
     public ApiResponse<AuthResponse> handleKaKaoAuthentication(@Valid AuthRequest request) {
-        return ApiResponse.of(authService.handleKaKaoAuthentication(request.getCode(), request.getRedirectUri()));
+        return ApiResponse.of(authService.handleKaKaoAuthentication(request.getAccessToken()));
     }
 
     @Operation(summary = "구글 인증 요청 API", description = "로그인을 위한 토큰 혹은 회원가입을 위한 정보가 반환됩니다.")
     @GetMapping("/api/v1/auth/google")
     public ApiResponse<AuthResponse> handleGoogleAuthentication(@Valid AuthRequest request) {
-        return ApiResponse.of(authService.handleGoogleAuthentication(request.getCode(), request.getRedirectUri()));
+        return ApiResponse.of(authService.handleGoogleAuthentication(request.getAccessToken()));
     }
 
 }

@@ -40,7 +40,7 @@ public class AuthServiceTest {
     @Test
     void 구_인증시_존재하지_않는_이메일의경우_회원가입을_위한_정보가_반환된다() {
         // when
-        AuthResponse response = authService.handleGoogleAuthentication("code", "redirectUri");
+        AuthResponse response = authService.handleGoogleAuthentication("accessToken");
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.SIGN_UP);
@@ -55,7 +55,7 @@ public class AuthServiceTest {
         memberRepository.save(MemberCreator.create("will.seungho@gmail.com", MemberProvider.GOOGLE));
 
         // when
-        AuthResponse response = authService.handleGoogleAuthentication("code", "redirectUri");
+        AuthResponse response = authService.handleGoogleAuthentication("accessToken");
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.LOGIN);
@@ -67,7 +67,7 @@ public class AuthServiceTest {
     @Test
     void 카카오_인증시_존재하지_않는_이메일의경우_회원가입을_위한_정보가_반환된다() {
         // when
-        AuthResponse response = authService.handleKaKaoAuthentication("code", "redirectUri");
+        AuthResponse response = authService.handleKaKaoAuthentication("accessToken");
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.SIGN_UP);
@@ -82,7 +82,7 @@ public class AuthServiceTest {
         memberRepository.save(MemberCreator.create("will.seungho@kakao.com", MemberProvider.KAKAO));
 
         // when
-        AuthResponse response = authService.handleKaKaoAuthentication("code", "redirectUri");
+        AuthResponse response = authService.handleKaKaoAuthentication("accessToken");
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.LOGIN);

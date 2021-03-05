@@ -4,10 +4,8 @@ import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.external.google.GoogleApiCaller;
-import com.gogo.external.google.dto.response.GoogleAccessTokenResponse;
 import com.gogo.external.google.dto.response.GoogleUserInfoResponse;
 import com.gogo.external.kakao.KaKaoApiCaller;
-import com.gogo.external.kakao.dto.response.KaKaoAccessTokenResponse;
 import com.gogo.external.kakao.dto.response.KaKaoUserInfoResponse;
 import com.gogo.service.auth.dto.response.AuthResponse;
 import com.gogo.utils.jwt.TokenService;
@@ -26,9 +24,8 @@ public class AuthService {
     private final TokenService tokenService;
 
     @Transactional(readOnly = true)
-    public AuthResponse handleGoogleAuthentication(String code, String redirectUri) {
-        GoogleAccessTokenResponse tokenResponse = googleApiCaller.getGoogleAccessToken(code, redirectUri);
-        GoogleUserInfoResponse userInfoResponse = googleApiCaller.getGoogleUserProfileInfo(tokenResponse.getAccessToken());
+    public AuthResponse handleGoogleAuthentication(String accessToken) {
+        GoogleUserInfoResponse userInfoResponse = googleApiCaller.getGoogleUserProfileInfo(accessToken);
 
         Member findMember = memberRepository.findMemberByEmailAndProvider(userInfoResponse.getEmail(), MemberProvider.GOOGLE);
         if (findMember == null) {
@@ -38,9 +35,8 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public AuthResponse handleKaKaoAuthentication(String code, String redirectUri) {
-        KaKaoAccessTokenResponse tokenResponse = kaKaoApiCaller.getKaKaoAccessToken(code, redirectUri);
-        KaKaoUserInfoResponse userInfoResponse = kaKaoApiCaller.getKaKaoUserProfileInfo(tokenResponse.getAccessToken());
+    public AuthResponse handleKaKaoAuthentication(String accessToken) {
+        KaKaoUserInfoResponse userInfoResponse = kaKaoApiCaller.getKaKaoUserProfileInfo(accessToken);
 
         Member findMember = memberRepository.findMemberByEmailAndProvider(userInfoResponse.getEmail(), MemberProvider.KAKAO);
         if (findMember == null) {
