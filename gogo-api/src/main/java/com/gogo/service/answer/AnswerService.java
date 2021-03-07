@@ -12,12 +12,15 @@ import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.answer.dto.request.CreateAnswerRequest;
 import com.gogo.service.answer.dto.request.PatchAnswerRequest;
 import com.gogo.service.answer.dto.response.AnswerInfoResponse;
+import com.gogo.service.answer.dto.response.AnswerResultDto;
+import com.gogo.service.answer.dto.response.AnswerResultResponse;
 import com.gogo.service.comment.dto.request.CreateCommentRequest;
 import com.gogo.service.comment.dto.response.CommentInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,6 +69,31 @@ public class AnswerService {
         answer.setBoardContent(boardContent);
         answerRepository.save(answer);
         return AnswerInfoResponse.of(answer);
+    }
+    @Transactional
+    public AnswerResultResponse getAnswer(Long boarId){
+        Board board = boardRepository.findBoardById(boarId);
+        List<BoardContent> boardContentList = boardContentRepository.findAllByBoard(board);
+        int totalAnswerCount = answerRepository.countAllByBoardAndStatus(board,"ACTIVE");
+        List<AnswerResultDto> answerResultDtoList = new ArrayList<>();
+        for(int i=0;i<boardContentList.size();i++){
+            BoardContent boardContent = boardContentList.get(i);
+            Long contentId = boardContent.getId();
+            String content = boardContent.getContent();
+            int answerCount = answerRepository.countAllByBoardContentAndStatus(boardContent,"ACTIVE");
+            double percentage=0.0;
+            if(totalAnswerCount!=0){
+                percentage = ((double)answerCount/(double)totalAnswerCount)*100;
+                percentage = Math.round((percentage*100)/100.0);
+            }
+            AnswerResultDto answerResultDto = new AnswerResultDto(contentId,content,percentage);
+            answerResultDtoList.add(answerResultDto);
+        }
+        Long boardId = board.getId();
+        String title = board.getTitle();
+        String description = board.getDescription();
+        AnswerResultResponse answerResultResponse = new AnswerResultResponse(boardId,title,description,answerResultDtoList);
+        return answerResultResponse;
     }
 
 }

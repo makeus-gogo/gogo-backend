@@ -13,4 +13,6 @@ import java.util.List;
 public interface AnswerRepository extends CrudRepository<Answer,Long> {
     Answer findAnswerByMemberAndBoardContentAndStatus(Member member, BoardContent boardContent,String status);
     Answer findAnswerByMemberAndBoardAndStatus(Member member, Board board, String status);
+    int countAllByBoardContentAndStatus(BoardContent boardContent,String status);
+    int countAllByBoardAndStatus(Board board,String status);
 }
