@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.gogo.exception.UnAuthorizedException;
+import com.gogo.exception.ValidationException;
 import com.gogo.utils.jwt.dto.component.JwtTokenProviderComponent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,7 @@ public class JwtTokenServiceImpl implements TokenService {
                 .withExpiresAt(Date.from(now.toInstant().plusSeconds(expiresMilliSeconds)))
                 .sign(Algorithm.HMAC512(jwtTokenProviderComponent.getSecretKey().getBytes()));
         } catch (JWTCreationException e) {
-            throw new IllegalArgumentException(String.format("토큰 생성이 실패하였습니다 (%s)", userId));
+            throw new ValidationException(String.format("토큰 생성이 실패하였습니다 (%s)", userId), "토큰 생성이 실패하였습니다.");
         }
     }
 
@@ -48,7 +50,7 @@ public class JwtTokenServiceImpl implements TokenService {
             final DecodedJWT jwt = createJwtVerifier().verify(token);
             return jwt.getClaim("userId").asDouble().longValue();
         } catch (RuntimeException e) {
-            throw new IllegalArgumentException(String.format("토큰 Decode 에 실패하였습니다 (%s)", token));
+            throw new UnAuthorizedException(String.format("토큰 Decode 에 실패하였습니다 (%s)", token));
         }
     }
 

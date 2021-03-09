@@ -1,6 +1,7 @@
 package com.gogo.service.upload;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.gogo.exception.ValidationException;
 import com.gogo.external.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class FileUploadService {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName));
+            throw new ValidationException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName), "잘못된 파일 형식입니다.");
         }
     }
 
