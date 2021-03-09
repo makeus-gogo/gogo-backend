@@ -3,6 +3,7 @@ package com.gogo.service.member;
 import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
+import com.gogo.exception.ConflictException;
 import com.gogo.service.member.dto.request.CreateMemberRequest;
 import com.gogo.service.member.dto.response.MemberInfoResponse;
 import com.gogo.utils.StubTokenServiceImpl;
@@ -85,7 +86,7 @@ public class MemberServiceTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> memberService.createMember(request)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> memberService.createMember(request)).isInstanceOf(ConflictException.class);
     }
 
     @Test
