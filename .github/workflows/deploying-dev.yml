@@ -43,7 +43,7 @@ jobs:
         env:
           PROFILES: dev
           DB_URI: ${{secrets.JDBC_URI}}
-          DB_USERNAME: ${{secret.DB_USERNAME}}
+          DB_USERNAME: ${{secrets.DB_USERNAME}}
           DB_PASSWORD: ${{secrets.DB_PASSWORD}}
           DB_DRIVER: org.mariadb.jdbc.Driver
 
