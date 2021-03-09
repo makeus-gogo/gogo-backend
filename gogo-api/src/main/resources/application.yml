@@ -13,4 +13,5 @@ spring:
       - jwt
       - cloud
       - aws
+      - rds
 

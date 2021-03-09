@@ -1,6 +1,6 @@
 ---
 spring:
-  profiles: local
+  profiles: local, dev
 cloud:
   aws:
     s3:
