@@ -39,6 +39,19 @@ jobs:
         run: |
           echo -e "jwt.JWT_SECRET_KEY=$JWT_SECRET_KEY" > $RESOURCE_PWD/application-jwt.properties
 
+      - name: Create rds secret properties
+        env:
+          PROFILES: dev
+          DB_URI: ${{secrets.JDBC_URI}}
+          DB_USERNAME: ${{secret.DB_USERNAME}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DB_DRIVER: org.mariadb.jdbc.Driver
+
+          RESOURCE_PWD: gogo-domain/src/main/resources
+        run: |
+          echo -e "spring.profiles=$PROFILES\nspring.datasource.hikari.jdbc-uri=$DB_URI\nspring.datasource.hikari.username=$DB_USERNAME\nspring.datasource.hikari.password=$DB_PASSWORD\nspring.datasource.hikari.driver-class-name=$DB_DRIVER" > $RESOURCE_PWD/application-rds.properties
+
+
 
       - name: Get Semantic Versioning
         id: docker-image-version
