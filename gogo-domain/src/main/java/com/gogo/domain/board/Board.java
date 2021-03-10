@@ -21,14 +21,18 @@ public class Board extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long memberId;
 
+    @Column(nullable = false)
     private String title;
 
     private String description;
 
     private String pictureUrl;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BoardType type;
 
     @Embedded

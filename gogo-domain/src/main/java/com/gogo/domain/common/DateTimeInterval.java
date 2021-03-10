@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
 
@@ -13,8 +14,10 @@ import java.time.LocalDateTime;
 @Embeddable
 public class DateTimeInterval {
 
+    @Column(nullable = false)
     private LocalDateTime startDateTime;
 
+    @Column(nullable = false)
     private LocalDateTime endDateTime;
 
     private DateTimeInterval(LocalDateTime startDateTime, LocalDateTime endDateTime) {
