@@ -15,21 +15,24 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
+    @Embedded
+    private Email email;
 
+    @Column(nullable = false)
     private String name;
 
     private String profileUrl;
 
     private String deviceToken;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
 
     @Builder
     public Member(Long id, String email, String name, String profileUrl, String deviceToken, MemberProvider provider) {
         this.id = id;
-        this.email = email;
+        this.email = Email.of(email);
         this.name = name;
         this.profileUrl = profileUrl;
         this.deviceToken = deviceToken;
@@ -53,6 +56,10 @@ public class Member extends BaseTimeEntity {
         if (StringUtils.hasText(profileUrl)) {
             this.profileUrl = profileUrl;
         }
+    }
+
+    public String getEmail() {
+        return this.email.getEmail();
     }
 
 }

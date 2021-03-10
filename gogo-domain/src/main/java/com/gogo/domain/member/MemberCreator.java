@@ -5,6 +5,7 @@ public final class MemberCreator {
     public static Member create(String email, MemberProvider memberProvider) {
         return Member.builder()
             .email(email)
+            .name("테스트 계정")
             .provider(memberProvider)
             .build();
     }
