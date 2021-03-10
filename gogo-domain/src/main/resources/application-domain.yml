@@ -9,6 +9,9 @@ spring:
 ---
 spring:
     profiles: local
+    jpa:
+      hibernate:
+        ddl-auto: create
     h2:
         console:
           enabled: true
