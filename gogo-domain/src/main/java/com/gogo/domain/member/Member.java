@@ -1,10 +1,7 @@
 package com.gogo.domain.member;
 
 import com.gogo.domain.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;

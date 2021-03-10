@@ -17,17 +17,21 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    private Long boardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     private String description;
 
     private String status = "ACTIVE";
 
-    public Comment(Long memberId, Long boardId, String description) {
-        this.memberId = memberId;
-        this.boardId = boardId;
+    public Comment(Member member, Board board, String description) {
+        this.member = member;
+        this.board = board;
         this.description = description;
     }
 }

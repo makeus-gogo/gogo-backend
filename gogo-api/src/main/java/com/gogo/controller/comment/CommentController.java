@@ -2,10 +2,12 @@ package com.gogo.controller.comment;
 
 import com.gogo.config.resolver.LoginUser;
 import com.gogo.controller.ApiResponse;
+import com.gogo.exception.ValidationException;
 import com.gogo.service.comment.CommentService;
 import com.gogo.service.comment.dto.request.CreateCommentRequest;
 import com.gogo.service.comment.dto.request.UpdateCommentRequest;
 import com.gogo.service.comment.dto.response.CommentInfoResponse;
+import com.gogo.service.comment.dto.response.CommentListInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +27,18 @@ public class CommentController {
     public ApiResponse<CommentInfoResponse> createComment(@Valid @RequestBody CreateCommentRequest createCommentRequest,
                                                           @PathVariable Long boardId,
                                                           @LoginUser Long memberId) {
+        if(createCommentRequest.getDescription()==null || createCommentRequest.getDescription().length()==0){
+            throw new ValidationException("댓글을 작성해주세요.","댓글을 작성해주세요.");
+        }
+
         return ApiResponse.of(commentService.createComment(createCommentRequest, boardId, memberId));
     }
 
 
     @GetMapping("api/v1/board/{boardId}/comment")
     @Operation(summary = "댓글 리스트 조회 API",description = "boardId(고민게시글 인덱스)")
-    public ApiResponse<List<CommentInfoResponse>> getCommentList(@PathVariable Long boardId
-    ) {
+    public ApiResponse<List<CommentListInfoResponse>> getCommentList(@PathVariable(required = true) Long boardId) {
+
         return ApiResponse.of(commentService.getCommentList(boardId));
     }
 
@@ -40,13 +46,19 @@ public class CommentController {
     @Operation(summary = "댓글 수정 API",description = "commentId(댓글 인덱스), 토큰이 필요합니다.")
     public ApiResponse<CommentInfoResponse> updateComment(@Valid @RequestBody UpdateCommentRequest updateCommentRequest,
                                                           @LoginUser Long memberId,
-                                                          @PathVariable Long commentId) {
+                                                          @PathVariable(required = true) Long commentId) {
+
+        if(updateCommentRequest.getDescription()==null || updateCommentRequest.getDescription().length()==0){
+            throw new ValidationException("댓글을 작성해주세요.","댓글을 작성해주세요.");
+        }
+
         return ApiResponse.of(commentService.updateComment(updateCommentRequest, commentId, memberId));
     }
 
     @PatchMapping("api/v1/comment/{commentId}/status")
     @Operation(summary = "댓글 삭제 API",description = "commentId(댓글 인덱스), 토큰이 필요합니다.")
-    public ApiResponse<String> deleteComment(@PathVariable Long commentId, @LoginUser Long memberId) {
+    public ApiResponse<String> deleteComment(@PathVariable Long commentId,
+                                             @LoginUser Long memberId) {
         commentService.deleteComment(commentId, memberId);
         return ApiResponse.OK;
     }
