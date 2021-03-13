@@ -1,9 +1,0 @@
-version: "3"
-services:
-  dev:
-    build: .
-    ports:
-      - 8080:8080
-    environment:
-      - "Duser_timezone=Asia/Seoul"
-      - "SPRING_PROFILES_ACTIVE=local"

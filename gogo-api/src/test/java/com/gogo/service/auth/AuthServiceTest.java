@@ -4,10 +4,8 @@ import com.gogo.domain.member.MemberCreator;
 import com.gogo.domain.member.MemberProvider;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.external.google.GoogleApiCaller;
-import com.gogo.external.google.dto.response.GoogleAccessTokenResponse;
 import com.gogo.external.google.dto.response.GoogleUserInfoResponse;
 import com.gogo.external.kakao.KaKaoApiCaller;
-import com.gogo.external.kakao.dto.response.KaKaoAccessTokenResponse;
 import com.gogo.external.kakao.dto.response.KaKaoUserInfoResponse;
 import com.gogo.service.auth.dto.response.AuthResponse;
 import com.gogo.utils.StubTokenServiceImpl;
@@ -91,14 +89,6 @@ public class AuthServiceTest {
     }
 
     private static class StubKaKaoAPiCaller implements KaKaoApiCaller {
-
-        @Override
-        public KaKaoAccessTokenResponse getKaKaoAccessToken(String code, String redirectUri) {
-            return KaKaoAccessTokenResponse.testBuilder()
-                .accessToken("accessToken")
-                .build();
-        }
-
         @Override
         public KaKaoUserInfoResponse getKaKaoUserProfileInfo(String accessToken) {
             return KaKaoUserInfoResponse.testInstance("will.seungho@kakao.com", "강승호");
@@ -106,14 +96,6 @@ public class AuthServiceTest {
     }
 
     private static class StubGoogleApiCaller implements GoogleApiCaller {
-
-        @Override
-        public GoogleAccessTokenResponse getGoogleAccessToken(String code, String redirectUri) {
-            return GoogleAccessTokenResponse.testBuilder()
-                .accessToken("accessToken")
-                .build();
-        }
-
         @Override
         public GoogleUserInfoResponse getGoogleUserProfileInfo(String accessToken) {
             return GoogleUserInfoResponse.builder()
@@ -121,6 +103,6 @@ public class AuthServiceTest {
                 .name("강승호")
                 .build();
         }
-
     }
+
 }

@@ -12,6 +12,4 @@ spring:
       - thirdparty
       - jwt
       - cloud
-      - aws
-      - rds
 

@@ -37,7 +37,3 @@ out/
 .vscode/
 
 generated/
-
-application-thirdparty.yml
-application-aws.yml
-application-rds.yml
