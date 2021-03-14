@@ -21,6 +21,8 @@ public class BoardDetailInfoResponse {
 
     private final String description;
 
+    private final String pictureUrl;
+
     private final BoardType type;
 
     private final Long memberId;
@@ -34,8 +36,8 @@ public class BoardDetailInfoResponse {
     private final List<String> hashTags = new ArrayList<>();
 
     public static BoardDetailInfoResponse of(Board board, List<String> hashTags) {
-        BoardDetailInfoResponse response = new BoardDetailInfoResponse(board.getId(), board.getTitle(),
-            board.getDescription(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
+        BoardDetailInfoResponse response = new BoardDetailInfoResponse(board.getId(), board.getTitle(), board.getDescription(),
+            board.getPictureUrl(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
         List<BoardContentResponse> contentResponses = board.getBoardContentList().stream()
             .map(BoardContentResponse::of)
             .collect(Collectors.toList());
