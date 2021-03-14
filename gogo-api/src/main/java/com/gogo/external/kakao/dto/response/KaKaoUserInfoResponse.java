@@ -21,37 +21,8 @@ public class KaKaoUserInfoResponse {
         this.kakaoAccount = kakaoAccount;
     }
 
-    @ToString
-    @Getter
-    @NoArgsConstructor
-    private static class KaKaoAccountResponse {
-
-        private String email;
-
-        private KaKaoProfileResponse profile;
-
-        public KaKaoAccountResponse(String email, KaKaoProfileResponse profile) {
-            this.email = email;
-            this.profile = profile;
-        }
-
-        @ToString
-        @Getter
-        @NoArgsConstructor
-        public static class KaKaoProfileResponse {
-
-            private String nickname;
-
-            public KaKaoProfileResponse(String nickname) {
-                this.nickname = nickname;
-            }
-
-        }
-
-    }
-
-    public static KaKaoUserInfoResponse testInstance(String email, String name) {
-        return new KaKaoUserInfoResponse("id", new KaKaoAccountResponse(email, new KaKaoAccountResponse.KaKaoProfileResponse(name)));
+    public static KaKaoUserInfoResponse testInstance(String email, String name, String profileUrl) {
+        return new KaKaoUserInfoResponse("id", new KaKaoAccountResponse(email, new KaKaoProfileResponse(name, profileUrl)));
     }
 
     public String getEmail() {
@@ -59,7 +30,17 @@ public class KaKaoUserInfoResponse {
     }
 
     public String getName() {
+        if (this.kakaoAccount.getProfile() == null) {
+            return null;
+        }
         return this.kakaoAccount.getProfile().getNickname();
+    }
+
+    public String getProfileImage() {
+        if (this.kakaoAccount.getProfile() == null) {
+            return null;
+        }
+        return this.kakaoAccount.getProfile().getProfileImage();
     }
 
 }

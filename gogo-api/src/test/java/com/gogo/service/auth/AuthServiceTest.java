@@ -44,6 +44,7 @@ public class AuthServiceTest {
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.SIGN_UP);
         assertThat(response.getEmail()).isEqualTo("will.seungho@gmail.com");
         assertThat(response.getName()).isEqualTo("강승호");
+        assertThat(response.getProfileUrl()).isEqualTo("profileUrl");
         assertThat(response.getToken()).isNull();
     }
 
@@ -71,6 +72,7 @@ public class AuthServiceTest {
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.SIGN_UP);
         assertThat(response.getEmail()).isEqualTo("will.seungho@kakao.com");
         assertThat(response.getName()).isEqualTo("강승호");
+        assertThat(response.getProfileUrl()).isEqualTo("profileUrl");
         assertThat(response.getToken()).isNull();
     }
 
@@ -91,7 +93,7 @@ public class AuthServiceTest {
     private static class StubKaKaoAPiCaller implements KaKaoApiCaller {
         @Override
         public KaKaoUserInfoResponse getKaKaoUserProfileInfo(String accessToken) {
-            return KaKaoUserInfoResponse.testInstance("will.seungho@kakao.com", "강승호");
+            return KaKaoUserInfoResponse.testInstance("will.seungho@kakao.com", "강승호", "profileUrl");
         }
     }
 
@@ -101,6 +103,7 @@ public class AuthServiceTest {
             return GoogleUserInfoResponse.builder()
                 .email("will.seungho@gmail.com")
                 .name("강승호")
+                .picture("profileUrl")
                 .build();
         }
     }

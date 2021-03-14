@@ -29,7 +29,7 @@ public class AuthService {
 
         Member findMember = memberRepository.findMemberByEmailAndProvider(userInfoResponse.getEmail(), MemberProvider.GOOGLE);
         if (findMember == null) {
-            return AuthResponse.signUpWithGoogle(userInfoResponse.getEmail(), userInfoResponse.getName());
+            return AuthResponse.signUpWithGoogle(userInfoResponse.getEmail(), userInfoResponse.getName(), userInfoResponse.getPicture());
         }
         return AuthResponse.login(tokenService.encodeSignUpToken(findMember.getId()));
     }
@@ -40,7 +40,7 @@ public class AuthService {
 
         Member findMember = memberRepository.findMemberByEmailAndProvider(userInfoResponse.getEmail(), MemberProvider.KAKAO);
         if (findMember == null) {
-            return AuthResponse.signUpWithKaKao(userInfoResponse.getEmail(), userInfoResponse.getName());
+            return AuthResponse.signUpWithKaKao(userInfoResponse.getEmail(), userInfoResponse.getName(), userInfoResponse.getProfileImage());
         }
         return AuthResponse.login(tokenService.encodeSignUpToken(findMember.getId()));
     }
