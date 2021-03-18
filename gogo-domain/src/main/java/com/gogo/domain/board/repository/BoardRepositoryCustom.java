@@ -12,6 +12,8 @@ public interface BoardRepositoryCustom {
 
     List<Board> findBoardsLessThanOrderByIdDescLimit(Long lastBoardId, int size);
 
-    List<Board> findBoardsByLikeTitle(String title);
+    List<Board> findBoardsByLikeTitle(String title, Long lastBoardId, int size);
+
+    List<Board> findLastBoardsByLikeTitle(String keyword, int size);
 
 }

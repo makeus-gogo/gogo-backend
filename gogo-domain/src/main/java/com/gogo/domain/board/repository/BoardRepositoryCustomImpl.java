@@ -43,11 +43,23 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public List<Board> findBoardsByLikeTitle(String title) {
+    public List<Board> findBoardsByLikeTitle(String title, Long lastBoardId, int size) {
         return queryFactory.selectFrom(board)
             .where(
-                board.description.contains(title)
+                board.description.contains(title),
+                board.id.lt(lastBoardId)
             ).orderBy(board.id.desc())
+            .limit(size)
+            .fetch();
+    }
+
+    @Override
+    public List<Board> findLastBoardsByLikeTitle(String keyword, int size) {
+        return queryFactory.selectFrom(board)
+            .where(
+                board.description.contains(keyword)
+            ).orderBy(board.id.desc())
+            .limit(size)
             .fetch();
     }
 

@@ -19,4 +19,12 @@ public final class MemberCreator {
             .build();
     }
 
+	public static Member create(String email) {
+        return Member.builder()
+            .email(email)
+            .name("테스트 유저")
+            .provider(MemberProvider.GOOGLE)
+            .build();
+	}
+
 }

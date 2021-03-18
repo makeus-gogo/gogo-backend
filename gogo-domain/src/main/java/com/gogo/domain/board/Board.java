@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -65,7 +66,9 @@ public class Board extends BaseTimeEntity {
     }
 
     public static Board newOXInstance(Long memberId, String description, String pictureUrl) {
-        return Board.newInstance(memberId, description, pictureUrl, BoardType.OX);
+        Board board = Board.newInstance(memberId, description, pictureUrl, BoardType.OX);
+        board.addContents(Arrays.asList("O", "X"));
+        return board;
     }
 
     private void addContents(List<String> contents) {

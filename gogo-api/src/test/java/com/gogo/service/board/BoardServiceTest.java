@@ -1,9 +1,12 @@
 package com.gogo.service.board;
 
 import com.gogo.domain.board.*;
+import com.gogo.domain.member.MemberCreator;
+import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
-import com.gogo.service.board.dto.response.BoardInfoResponse;
+import com.gogo.service.board.dto.response.BoardWithCreatorInfoResponse;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +29,21 @@ public class BoardServiceTest {
     @Autowired
     private BoardContentRepository boardContentRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @AfterEach
     void cleanUp() {
         boardContentRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
+        memberRepository.deleteAll();
+    }
+
+    private Long memberId;
+
+    @BeforeEach
+    void setUpMember() {
+        memberId = memberRepository.save(MemberCreator.create("will.seungho@gmail.com")).getId();
     }
 
     @Test
@@ -49,7 +63,7 @@ public class BoardServiceTest {
             .build();
 
         // when
-        boardService.createBoard(request, 1L);
+        boardService.createBoard(request, memberId);
 
         // then
         List<Board> boardList = boardRepository.findAll();
@@ -71,80 +85,49 @@ public class BoardServiceTest {
     @Test
     void 게시글을_마지막으로_본_다음_게시글부터_2개씩_불러온다() {
         // given
-        Board board1 = BoardCreator.create("게시글 1");
-        Board board2 = BoardCreator.create("게시글 2");
-        Board board3 = BoardCreator.create("게시글 3");
+        Board board1 = BoardCreator.create("게시글 1", memberId);
+        Board board2 = BoardCreator.create("게시글 2", memberId);
+        Board board3 = BoardCreator.create("게시글 3", memberId);
         boardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         // when
-        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(board3.getId(), 2);
+        List<BoardWithCreatorInfoResponse> responses = boardService.getBoardsLessThanBoardId(board3.getId(), 2);
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getDescription()).isEqualTo(board2.getDescription());
-        assertThat(responses.get(1).getDescription()).isEqualTo(board1.getDescription());
+        assertThat(responses.get(0).getBoard().getDescription()).isEqualTo(board2.getDescription());
+        assertThat(responses.get(1).getBoard().getDescription()).isEqualTo(board1.getDescription());
     }
 
     @Test
     void 게시글을_불러올때_2개를_불러오는데_남은것이_1개일경우_1개를_불러온다() {
         // given
-        Board board1 = BoardCreator.create("게시글 1");
-        Board board2 = BoardCreator.create("게시글 2");
+        Board board1 = BoardCreator.create("게시글 1", memberId);
+        Board board2 = BoardCreator.create("게시글 2", memberId);
         boardRepository.saveAll(Arrays.asList(board1, board2));
 
         // when
-        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(board2.getId(), 2);
+        List<BoardWithCreatorInfoResponse> responses = boardService.getBoardsLessThanBoardId(board2.getId(), 2);
 
         // then
         assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).getDescription()).isEqualTo(board1.getDescription());
+        assertThat(responses.get(0).getBoard().getDescription()).isEqualTo(board1.getDescription());
     }
 
     @Test
     void 최초_게시물을_불러올때_가장_최신의_게시물_2개를_불러온다() {
         // given
-        Board board1 = BoardCreator.create("게시글 1");
-        Board board2 = BoardCreator.create("게시글 2");
+        Board board1 = BoardCreator.create("게시글 1", memberId);
+        Board board2 = BoardCreator.create("게시글 2", memberId);
         boardRepository.saveAll(Arrays.asList(board1, board2));
 
         // when
-        List<BoardInfoResponse> responses = boardService.getBoardsLessThanBoardId(0L, 2);
+        List<BoardWithCreatorInfoResponse> responses = boardService.getBoardsLessThanBoardId(0L, 2);
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getDescription()).isEqualTo(board2.getDescription());
-        assertThat(responses.get(1).getDescription()).isEqualTo(board1.getDescription());
-    }
-
-    @Test
-    void 특정_키워드가_포함된_제목을_검색한다_1() {
-        // given
-        Board board1 = BoardCreator.create("게시글 1");
-        Board board2 = BoardCreator.create("게시글 2");
-        boardRepository.saveAll(Arrays.asList(board1, board2));
-
-        // when
-        List<BoardInfoResponse> responses = boardService.searchBoardsByKeyword("게시글");
-
-        // then
-        assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getDescription()).isEqualTo(board2.getDescription());
-        assertThat(responses.get(1).getDescription()).isEqualTo(board1.getDescription());
-    }
-
-    @Test
-    void 특정_키워드가_포함된_제목을_검색한다_2() {
-        // given
-        Board board1 = BoardCreator.create("게시글 1");
-        Board board2 = BoardCreator.create("게시글 2");
-        boardRepository.saveAll(Arrays.asList(board1, board2));
-
-        // when
-        List<BoardInfoResponse> responses = boardService.searchBoardsByKeyword("시글 1");
-
-        // then
-        assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).getDescription()).isEqualTo(board1.getDescription());
+        assertThat(responses.get(0).getBoard().getDescription()).isEqualTo(board2.getDescription());
+        assertThat(responses.get(1).getBoard().getDescription()).isEqualTo(board1.getDescription());
     }
 
 }
