@@ -15,9 +15,6 @@ import java.util.List;
 public class CreateBoardRequest {
 
     @NotBlank
-    private String title;
-
-    @NotBlank
     private String description;
 
     private String pictureUrl;
@@ -30,8 +27,7 @@ public class CreateBoardRequest {
     private List<String> hashTags;
 
     @Builder(builderMethodName = "testBuilder")
-    public CreateBoardRequest(@NotBlank String title, @NotBlank String description, String pictureUrl, List<String> contents, BoardType type, List<String> hashTags) {
-        this.title = title;
+    public CreateBoardRequest(@NotBlank String description, String pictureUrl, List<String> contents, BoardType type, List<String> hashTags) {
         this.description = description;
         this.pictureUrl = pictureUrl;
         this.contents = contents;
@@ -42,9 +38,9 @@ public class CreateBoardRequest {
     // TODO 좀 더 OOP 적으로 생각
     public Board toEntity(Long memberId) {
         if (type.equals(BoardType.MULTI_CHOICE)) {
-            return Board.newMultiChoiceBoard(memberId, title, description, pictureUrl, contents);
+            return Board.newMultiChoiceBoard(memberId, description, pictureUrl, contents);
         }
-        return Board.newOXInstance(memberId, title, description, pictureUrl);
+        return Board.newOXInstance(memberId, description, pictureUrl);
     }
 
 }

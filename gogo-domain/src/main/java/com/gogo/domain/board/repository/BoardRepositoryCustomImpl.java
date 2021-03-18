@@ -46,7 +46,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     public List<Board> findBoardsByLikeTitle(String title) {
         return queryFactory.selectFrom(board)
             .where(
-                board.title.contains(title)
+                board.description.contains(title)
             ).orderBy(board.id.desc())
             .fetch();
     }

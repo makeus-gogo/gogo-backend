@@ -14,8 +14,6 @@ public class BoardInfoResponse {
 
     private final Long id;
 
-    private final String title;
-
     private final String description;
 
     private final String pictureUrl;
@@ -29,7 +27,7 @@ public class BoardInfoResponse {
     private final LocalDateTime endDateTime;
 
     public static BoardInfoResponse of(Board board) {
-        return new BoardInfoResponse(board.getId(), board.getTitle(), board.getDescription(), board.getPictureUrl(),
+        return new BoardInfoResponse(board.getId(), board.getDescription(), board.getPictureUrl(),
             board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
     }
 

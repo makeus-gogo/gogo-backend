@@ -25,8 +25,6 @@ public class Board extends BaseTimeEntity {
     private Long memberId;
 
     @Column(nullable = false)
-    private String title;
-
     private String description;
 
     private String pictureUrl;
@@ -42,34 +40,32 @@ public class Board extends BaseTimeEntity {
     private final List<BoardContent> boardContentList = new ArrayList<>();
 
     @Builder
-    public Board(Long memberId, String title, String description, String pictureUrl, BoardType type) {
+    public Board(Long memberId, String description, String pictureUrl, BoardType type) {
         final LocalDateTime now = LocalDateTime.now();
         this.memberId = memberId;
-        this.title = title;
         this.description = description;
         this.pictureUrl = pictureUrl;
         this.type = type;
         this.dateTimeInterval = DateTimeInterval.of(now, now.plusDays(7));
     }
 
-    private static Board newInstance(Long memberId, String title, String description, String pictureUrl, BoardType type) {
+    private static Board newInstance(Long memberId, String description, String pictureUrl, BoardType type) {
         return Board.builder()
             .memberId(memberId)
-            .title(title)
             .description(description)
             .pictureUrl(pictureUrl)
             .type(type)
             .build();
     }
 
-    public static Board newMultiChoiceBoard(Long memberId, String title, String description, String pictureUrl, List<String> contents) {
-        Board board = Board.newInstance(memberId, title, description, pictureUrl, BoardType.MULTI_CHOICE);
+    public static Board newMultiChoiceBoard(Long memberId, String description, String pictureUrl, List<String> contents) {
+        Board board = Board.newInstance(memberId, description, pictureUrl, BoardType.MULTI_CHOICE);
         board.addContents(contents);
         return board;
     }
 
-    public static Board newOXInstance(Long memberId, String title, String description, String pictureUrl) {
-        return Board.newInstance(memberId, title, description, pictureUrl, BoardType.OX);
+    public static Board newOXInstance(Long memberId, String description, String pictureUrl) {
+        return Board.newInstance(memberId, description, pictureUrl, BoardType.OX);
     }
 
     private void addContents(List<String> contents) {

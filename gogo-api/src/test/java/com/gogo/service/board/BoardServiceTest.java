@@ -35,14 +35,12 @@ public class BoardServiceTest {
     @Test
     void 새로운_고민_게시물을_등록한다() {
         // given
-        String title = "title";
         String description = "description";
         String pictureUrl = "http://pict.com";
         BoardType type = BoardType.MULTI_CHOICE;
         List<String> contents = Arrays.asList("이게 좋을까?", "저게 좋을까?");
 
         CreateBoardRequest request = CreateBoardRequest.testBuilder()
-            .title(title)
             .description(description)
             .pictureUrl(pictureUrl)
             .type(type)
@@ -56,7 +54,7 @@ public class BoardServiceTest {
         // then
         List<Board> boardList = boardRepository.findAll();
         assertThat(boardList).hasSize(1);
-        assertBoard(boardList.get(0), title, description, type, pictureUrl);
+        assertBoard(boardList.get(0), description, type, pictureUrl);
 
         List<BoardContent> boardContentList = boardContentRepository.findAll();
         assertThat(boardContentList).hasSize(2);
@@ -64,8 +62,7 @@ public class BoardServiceTest {
         assertThat(boardContentList.get(1).getContent()).isEqualTo(contents.get(1));
     }
 
-    private void assertBoard(Board board, String title, String description, BoardType type, String pictureUrl) {
-        assertThat(board.getTitle()).isEqualTo(title);
+    private void assertBoard(Board board, String description, BoardType type, String pictureUrl) {
         assertThat(board.getDescription()).isEqualTo(description);
         assertThat(board.getType()).isEqualTo(type);
         assertThat(board.getPictureUrl()).isEqualTo(pictureUrl);
@@ -84,8 +81,8 @@ public class BoardServiceTest {
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board2.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
+        assertThat(responses.get(0).getDescription()).isEqualTo(board2.getDescription());
+        assertThat(responses.get(1).getDescription()).isEqualTo(board1.getDescription());
     }
 
     @Test
@@ -100,7 +97,7 @@ public class BoardServiceTest {
 
         // then
         assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board1.getTitle());
+        assertThat(responses.get(0).getDescription()).isEqualTo(board1.getDescription());
     }
 
     @Test
@@ -115,8 +112,8 @@ public class BoardServiceTest {
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board2.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
+        assertThat(responses.get(0).getDescription()).isEqualTo(board2.getDescription());
+        assertThat(responses.get(1).getDescription()).isEqualTo(board1.getDescription());
     }
 
     @Test
@@ -131,8 +128,8 @@ public class BoardServiceTest {
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board2.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board1.getTitle());
+        assertThat(responses.get(0).getDescription()).isEqualTo(board2.getDescription());
+        assertThat(responses.get(1).getDescription()).isEqualTo(board1.getDescription());
     }
 
     @Test
@@ -147,7 +144,7 @@ public class BoardServiceTest {
 
         // then
         assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board1.getTitle());
+        assertThat(responses.get(0).getDescription()).isEqualTo(board1.getDescription());
     }
 
 }

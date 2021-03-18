@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCreator {
 
-    public static Board create(String title) {
+    public static Board create(String description) {
         return Board.builder()
-            .title(title)
             .memberId(1L)
-            .description("description")
+            .description(description)
             .type(BoardType.MULTI_CHOICE)
             .build();
     }
