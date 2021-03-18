@@ -87,8 +87,9 @@ public class AnswerService {
     }
 
     @Transactional
-    public AnswerResultResponse getAnswer(Long boardId) {
+    public AnswerResultResponse getAnswer(Long boardId,Long memberId) {
         Board board = boardRepository.findBoardById(boardId);
+        Member member = memberRepository.findMemberById(memberId);
         if (board == null) {
             throw new NotFoundException(String.format("해당하는 (%s)의 게시판은 존재하지 않습니다", boardId), "해당하는 게시판은 존재하지 않습니다");
         }
@@ -101,13 +102,20 @@ public class AnswerService {
             Long contentId = boardContent.getId();
             String content = boardContent.getContent();
             int answerCount = answerRepository.countAllByBoardContentAndStatus(boardContent, "ACTIVE");
+            int check = 0;
+            Answer answer = answerRepository.findAnswerByMemberAndBoardContentAndStatus(member,boardContent,"ACTIVE");
+            if(answer==null){
+                check = 0;
+            }else{
+                check = 1;
+            }
             double percentage = 0.0;
 
             if (totalAnswerCount != 0) {
                 percentage = ((double) answerCount / (double) totalAnswerCount) * 100;
                 percentage = Math.round((percentage * 100) / 100.0);
             }
-            AnswerResultDto answerResultDto = new AnswerResultDto(contentId, content, percentage);
+            AnswerResultDto answerResultDto = new AnswerResultDto(contentId, content,check,percentage);
             answerResultDtoList.add(answerResultDto);
         }
 

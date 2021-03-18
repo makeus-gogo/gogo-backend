@@ -8,5 +8,6 @@ import lombok.RequiredArgsConstructor;
 public class AnswerResultDto {
     private final Long contentId;
     private final String content;
+    private final int check;
     private final double percentage;
 }
