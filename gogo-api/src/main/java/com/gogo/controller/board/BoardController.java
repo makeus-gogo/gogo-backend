@@ -6,6 +6,7 @@ import com.gogo.service.board.BoardService;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import com.gogo.service.board.dto.response.BoardDetailInfoResponse;
 import com.gogo.service.board.dto.response.BoardInfoResponse;
+import com.gogo.service.board.dto.response.BoardTop3Response;
 import com.gogo.service.board.dto.response.BoardWithCreatorInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -44,4 +45,9 @@ public class BoardController {
         return ApiResponse.of(boardService.searchBoardsByKeyword(keyword, lastBoardId, size));
     }
 
+    @Operation(summary = "TOP3 고민 게시물 조회 API")
+    @GetMapping("/api/v1/board/top")
+    public ApiResponse<List<BoardTop3Response>> getTop3Board(){
+        return new ApiResponse("","",boardService.getTop3Board());
+    }
 }
