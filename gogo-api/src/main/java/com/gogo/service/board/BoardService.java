@@ -1,18 +1,21 @@
 package com.gogo.service.board;
 
+import com.gogo.domain.answer.repository.AnswerRepository;
 import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardCreatorCollection;
 import com.gogo.domain.board.BoardRepository;
+import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
-import com.gogo.service.board.dto.response.BoardDetailInfoResponse;
-import com.gogo.service.board.dto.response.BoardInfoResponse;
-import com.gogo.service.board.dto.response.BoardWithCreatorInfoResponse;
+import com.gogo.service.board.dto.response.*;
 import com.gogo.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final HashTagService hashTagService;
+    private final AnswerRepository answerRepository;
 
     @Transactional
     public BoardDetailInfoResponse createBoard(CreateBoardRequest request, Long memberId) {
@@ -71,4 +75,42 @@ public class BoardService {
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardTop3Response> getTop3Board(){
+        List<Board> boardList = boardRepository.findAll();
+        List<BoardAnswerCountDto> boardAnswerCountDtoList = new ArrayList<>();
+        for(int i=0;i<boardList.size();i++){
+            int answerCount = answerRepository.countAllByBoardAndStatus(boardList.get(i),"ACTIVE");
+            BoardAnswerCountDto boardAnswerCountDto = new BoardAnswerCountDto(answerCount,boardList.get(i));
+            boardAnswerCountDtoList.add(boardAnswerCountDto);
+        }
+
+        Collections.sort(boardAnswerCountDtoList,new CompareBoardAnswerCount());
+
+        List<BoardTop3Response> boardTop3ResponseList = new ArrayList<>();
+        for(int i=0;i<3;i++){
+            Long boardId = boardAnswerCountDtoList.get(i).getBoard().getId();
+            Long memberId = boardAnswerCountDtoList.get(i).getBoard().getMemberId();
+            Member member = memberRepository.findMemberById(memberId);
+            String nickname = member.getName();
+            String profileImageUrl = member.getProfileUrl();
+            String description = boardAnswerCountDtoList.get(i).getBoard().getDescription();
+            String boardImageUrl = boardAnswerCountDtoList.get(i).getBoard().getPictureUrl();
+            BoardTop3Response boardTop3Response = new BoardTop3Response(boardId,memberId,nickname,profileImageUrl,description,boardImageUrl);
+            boardTop3ResponseList.add(boardTop3Response);
+        }
+        return boardTop3ResponseList;
+    }
+}
+
+class CompareBoardAnswerCount implements Comparator<BoardAnswerCountDto> {
+    @Override
+    public int compare(BoardAnswerCountDto o1, BoardAnswerCountDto o2) {
+        if(o1.getAnswerCount() < o2.getAnswerCount()){
+            return 1;
+        }else if(o1.getAnswerCount() > o2.getAnswerCount()){
+            return -1;
+        }
+        return 0;
+    }
 }
