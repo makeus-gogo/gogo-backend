@@ -41,7 +41,7 @@ public class BoardController {
 
     @Operation(summary = "고민 게시물들을 키워드로 검색하는 API")
     @GetMapping("/api/v1/board/search")
-    public ApiResponse<List<BoardInfoResponse>> searchBoardsByName(@RequestParam String keyword, @RequestParam Long lastBoardId, @RequestParam int size) {
+    public ApiResponse<List<BoardInfoResponse>> searchBoardsByName(@RequestParam(required = false) String keyword, @RequestParam Long lastBoardId, @RequestParam int size) {
         return ApiResponse.of(boardService.searchBoardsByKeyword(keyword, lastBoardId, size));
     }
 
