@@ -38,9 +38,8 @@ public class BoardController {
 
     @Operation(summary = "특정 고민 게시물을 상세하게 조회하는 API")
     @GetMapping("/api/v1/board/{boardId}")
-    public ApiResponse<AnswerResultResponse> getBoard(@PathVariable Long boardId,
-                                                       @LoginUser Long memberId){
-        return new ApiResponse("","",answerService.getAnswer(boardId,memberId));
+    public ApiResponse<AnswerResultResponse> getBoard(@PathVariable Long boardId){
+        return new ApiResponse("","",answerService.getAnswer(boardId));
     }
 
     @Operation(summary = "고민 게시물들을 키워드로 검색하는 API")

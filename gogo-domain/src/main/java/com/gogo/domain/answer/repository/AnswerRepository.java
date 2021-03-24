@@ -15,4 +15,5 @@ public interface AnswerRepository extends CrudRepository<Answer,Long> {
     Answer findAnswerByMemberAndBoardAndStatus(Member member, Board board, String status);
     int countAllByBoardContentAndStatus(BoardContent boardContent,String status);
     int countAllByBoardAndStatus(Board board,String status);
+    Answer findAnswerByBoardContentAndStatus(BoardContent boardContent,String status);
 }

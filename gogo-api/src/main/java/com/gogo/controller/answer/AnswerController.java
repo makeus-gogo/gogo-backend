@@ -53,8 +53,7 @@ public class AnswerController {
     @Operation(summary = "고민 답변 결과 조회 API",description = "boardId(고민게시글 인덱스), 토큰이 필요합니다. " +
         "(자신이 선택한 선택지(contentId)는  check가 1입니다. 자신이 선택한게 아니라면 check가 0입니다.")
     @ResponseBody
-    public ApiResponse<AnswerResultResponse> getAnswer(@PathVariable Long boardId,
-                                                       @LoginUser Long memberId){
-        return new ApiResponse("","",answerService.getAnswer(boardId,memberId));
+    public ApiResponse<AnswerResultResponse> getAnswer(@PathVariable Long boardId){
+        return new ApiResponse("","",answerService.getAnswer(boardId));
     }
 }
