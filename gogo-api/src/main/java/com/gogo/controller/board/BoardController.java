@@ -2,6 +2,8 @@ package com.gogo.controller.board;
 
 import com.gogo.config.resolver.LoginUser;
 import com.gogo.controller.ApiResponse;
+import com.gogo.service.answer.AnswerService;
+import com.gogo.service.answer.dto.response.AnswerResultResponse;
 import com.gogo.service.board.BoardService;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import com.gogo.service.board.dto.response.BoardDetailInfoResponse;
@@ -20,6 +22,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final AnswerService answerService;
 
     @Operation(summary = "고민 게시물을 업로드하는 API", description = "Bearer 토큰이 필요합니다")
     @PostMapping("/api/v1/board")
@@ -35,8 +38,9 @@ public class BoardController {
 
     @Operation(summary = "특정 고민 게시물을 상세하게 조회하는 API")
     @GetMapping("/api/v1/board/{boardId}")
-    public ApiResponse<BoardDetailInfoResponse> getBoard(@PathVariable Long boardId) {
-        return ApiResponse.of(boardService.getBoardInfo(boardId));
+    public ApiResponse<AnswerResultResponse> getBoard(@PathVariable Long boardId,
+                                                       @LoginUser Long memberId){
+        return new ApiResponse("","",answerService.getAnswer(boardId,memberId));
     }
 
     @Operation(summary = "고민 게시물들을 키워드로 검색하는 API")

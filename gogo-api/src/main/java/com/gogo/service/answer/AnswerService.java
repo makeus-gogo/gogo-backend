@@ -2,10 +2,7 @@ package com.gogo.service.answer;
 
 import com.gogo.domain.answer.Answer;
 import com.gogo.domain.answer.repository.AnswerRepository;
-import com.gogo.domain.board.Board;
-import com.gogo.domain.board.BoardContent;
-import com.gogo.domain.board.BoardContentRepository;
-import com.gogo.domain.board.BoardRepository;
+import com.gogo.domain.board.*;
 import com.gogo.domain.comment.Comment;
 import com.gogo.domain.member.Member;
 import com.gogo.domain.member.MemberRepository;
@@ -17,10 +14,12 @@ import com.gogo.service.answer.dto.response.AnswerResultDto;
 import com.gogo.service.answer.dto.response.AnswerResultResponse;
 import com.gogo.service.comment.dto.request.CreateCommentRequest;
 import com.gogo.service.comment.dto.response.CommentInfoResponse;
+import com.gogo.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class AnswerService {
     private final BoardContentRepository boardContentRepository;
     private final AnswerRepository answerRepository;
     private final BoardRepository boardRepository;
+    private final HashTagService hashTagService;
 
     @Transactional
     public AnswerInfoResponse createAnswer(CreateAnswerRequest createAnswerRequest, Long memberId, Long boardId) {
@@ -121,7 +121,12 @@ public class AnswerService {
 
         Long id = board.getId();
         String description = board.getDescription();
-        AnswerResultResponse answerResultResponse = new AnswerResultResponse(id, description, answerResultDtoList);
+        String pictureUrl = board.getPictureUrl();
+        BoardType type = board.getType();
+        LocalDateTime startDateTime = board.getStartDateTime();
+        LocalDateTime endDateTime = board.getEndDateTime();
+        List<String> hashTags = hashTagService.retrieveHashTagsInBoard(boardId);
+        AnswerResultResponse answerResultResponse = new AnswerResultResponse(id, description,pictureUrl,type,startDateTime,endDateTime,hashTags, answerResultDtoList);
         return answerResultResponse;
     }
 
