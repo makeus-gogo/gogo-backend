@@ -87,9 +87,9 @@ public class AnswerService {
     }
 
     @Transactional
-    public AnswerResultResponse getAnswer(Long boardId) {
+    public AnswerResultResponse getAnswer(Long boardId,Long memberId) {
         Board board = boardRepository.findBoardById(boardId);
-        //Member member = memberRepository.findMemberById(memberId);
+        Member member = memberRepository.findMemberById(memberId);
         if (board == null) {
             throw new NotFoundException(String.format("해당하는 (%s)의 게시판은 존재하지 않습니다", boardId), "해당하는 게시판은 존재하지 않습니다");
         }
@@ -103,7 +103,7 @@ public class AnswerService {
             String content = boardContent.getContent();
             int answerCount = answerRepository.countAllByBoardContentAndStatus(boardContent, "ACTIVE");
             int check = 0;
-            Answer answer = answerRepository.findAnswerByBoardContentAndStatus(boardContent,"ACTIVE");
+            Answer answer = answerRepository.findAnswerByMemberAndBoardContentAndStatus(member,boardContent,"ACTIVE");
             if(answer==null){
                 check = 0;
             }else{

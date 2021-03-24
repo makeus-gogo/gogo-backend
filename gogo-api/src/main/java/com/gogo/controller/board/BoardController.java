@@ -36,10 +36,10 @@ public class BoardController {
         return ApiResponse.of(boardService.getBoardsLessThanBoardId(lastBoardId, size));
     }
 
-    @Operation(summary = "특정 고민 게시물을 상세하게 조회하는 API")
+    @Operation(summary = "특정 고민 게시물을 상세하게 조회하는 API",description = "(자신이 선택한 선택지(contentId)는  check가 1입니다. 자신이 선택한게 아니라면 check가 0입니다.")
     @GetMapping("/api/v1/board/{boardId}")
-    public ApiResponse<AnswerResultResponse> getBoard(@PathVariable Long boardId){
-        return new ApiResponse("","",answerService.getAnswer(boardId));
+    public ApiResponse<AnswerResultResponse> getBoard(@PathVariable Long boardId,@LoginUser Long memberId){
+        return new ApiResponse("","",answerService.getAnswer(boardId,memberId));
     }
 
     @Operation(summary = "고민 게시물들을 키워드로 검색하는 API")
