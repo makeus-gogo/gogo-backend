@@ -12,6 +12,7 @@ import com.gogo.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,19 +38,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardWithCreatorInfoResponse> getBoardsLessThanBoardId(Long lastBoardId, int size) {
-        return lastBoardId == 0 ? getLatestBoards(size) : getLatestBoardLessThanId(lastBoardId, size);
-    }
-
-    private List<BoardWithCreatorInfoResponse> getLatestBoards(int size) {
-        List<Board> boardList = boardRepository.findBoardsOrderByIdDesc(size);
-        BoardCreatorCollection collection = BoardCreatorCollection.of(memberRepository, boardList);
-        return boardList.stream()
-            .map(board -> BoardWithCreatorInfoResponse.of(board, collection.getCreator(board.getMemberId())))
-            .collect(Collectors.toList());
-    }
-
-    private List<BoardWithCreatorInfoResponse> getLatestBoardLessThanId(Long lastBoardId, int size) {
-        List<Board> boardList = boardRepository.findBoardsLessThanOrderByIdDescLimit(lastBoardId, size);
+        List<Board> boardList = BoardServiceUtils.findBoardsOrderByIdWithPagination(boardRepository, lastBoardId, size);
         BoardCreatorCollection collection = BoardCreatorCollection.of(memberRepository, boardList);
         return boardList.stream()
             .map(board -> BoardWithCreatorInfoResponse.of(board, collection.getCreator(board.getMemberId())))
@@ -65,12 +54,22 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardInfoResponse> searchBoardsByKeyword(String keyword, Long lastBoardId, int size) {
-        if (lastBoardId == 0) {
-            return boardRepository.findLastBoardsByLikeTitle(keyword, size).stream()
-                .map(BoardInfoResponse::of)
-                .collect(Collectors.toList());
+        if (StringUtils.isEmpty(keyword)) {
+            return findPaginationBoards(boardRepository, lastBoardId, size);
         }
-        return boardRepository.findBoardsByLikeTitle(keyword, lastBoardId, size).stream()
+        return findPaginationBoardsWithKeyword(keyword, lastBoardId, size);
+    }
+
+    private List<BoardInfoResponse> findPaginationBoards(BoardRepository boardRepository, Long lastBoardId, int size) {
+        List<Board> boardList = BoardServiceUtils.findBoardsOrderByIdWithPagination(boardRepository, lastBoardId, size);
+        return boardList.stream()
+            .map(BoardInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
+    private List<BoardInfoResponse> findPaginationBoardsWithKeyword(String keyword, Long lastBoardId, int size) {
+        List<Board> boardList = BoardServiceUtils.getBoardsByLikeKeyword(boardRepository, keyword, lastBoardId, size);
+        return boardList.stream()
             .map(BoardInfoResponse::of)
             .collect(Collectors.toList());
     }
