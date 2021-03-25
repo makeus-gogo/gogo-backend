@@ -93,7 +93,12 @@ public class AnswerService {
         if (board == null) {
             throw new NotFoundException(String.format("해당하는 (%s)의 게시판은 존재하지 않습니다", boardId), "해당하는 게시판은 존재하지 않습니다");
         }
-
+        int userCheck;
+        if(board.getMemberId()==memberId){
+            userCheck=1;
+        }else{
+            userCheck = 0;
+        }
         List<BoardContent> boardContentList = boardContentRepository.findAllByBoard(board);
         int totalAnswerCount = answerRepository.countAllByBoardAndStatus(board, "ACTIVE");
         List<AnswerResultDto> answerResultDtoList = new ArrayList<>();
@@ -109,6 +114,7 @@ public class AnswerService {
             }else{
                 check = 1;
             }
+
             double percentage = 0.0;
 
             if (totalAnswerCount != 0) {
@@ -126,7 +132,7 @@ public class AnswerService {
         LocalDateTime startDateTime = board.getStartDateTime();
         LocalDateTime endDateTime = board.getEndDateTime();
         List<String> hashTags = hashTagService.retrieveHashTagsInBoard(boardId);
-        AnswerResultResponse answerResultResponse = new AnswerResultResponse(id, description,pictureUrl,type,startDateTime,endDateTime,hashTags, answerResultDtoList);
+        AnswerResultResponse answerResultResponse = new AnswerResultResponse(id, description,pictureUrl,type,userCheck,startDateTime,endDateTime,hashTags, answerResultDtoList);
         return answerResultResponse;
     }
 

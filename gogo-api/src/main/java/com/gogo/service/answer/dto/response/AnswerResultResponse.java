@@ -14,6 +14,7 @@ public class AnswerResultResponse {
     private final String description;
     private final String pictureUrl;
     private final BoardType type;
+    private final int userCheck;
     private final LocalDateTime startDateTime;
     private final LocalDateTime endDateTime;
     private final List<String> hashTags;
