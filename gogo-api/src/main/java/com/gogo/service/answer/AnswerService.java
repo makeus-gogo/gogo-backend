@@ -10,6 +10,7 @@ import com.gogo.exception.NotFoundException;
 import com.gogo.service.answer.dto.request.CreateAnswerRequest;
 import com.gogo.service.answer.dto.request.PatchAnswerRequest;
 import com.gogo.service.answer.dto.response.AnswerInfoResponse;
+import com.gogo.service.answer.dto.response.AnswerResponse;
 import com.gogo.service.answer.dto.response.AnswerResultDto;
 import com.gogo.service.answer.dto.response.AnswerResultResponse;
 import com.gogo.service.comment.dto.request.CreateCommentRequest;
@@ -33,7 +34,7 @@ public class AnswerService {
     private final HashTagService hashTagService;
 
     @Transactional
-    public AnswerInfoResponse createAnswer(CreateAnswerRequest createAnswerRequest, Long memberId, Long boardId) {
+    public AnswerResponse createAnswer(CreateAnswerRequest createAnswerRequest, Long memberId, Long boardId) {
         Member member = memberRepository.findMemberById(memberId);
 
         Board board = boardRepository.findBoardById(boardId);
@@ -58,11 +59,38 @@ public class AnswerService {
         if (existingBoardAnswer != null) {
             throw new NotFoundException(String.format("이미 해당 게시물에 답변을 고른적이 있습니다."), "이미 해당 게시물에 답변을 고른적이 있습니다.");
         }
-
-
         Answer answer = new Answer(member, board, boardContent);
         answerRepository.save(answer);
-        return AnswerInfoResponse.of(answer);
+
+        List<BoardContent> boardContentList = boardContentRepository.findAllByBoard(board);
+        int totalAnswerCount = answerRepository.countAllByBoardAndStatus(board, "ACTIVE");
+        List<AnswerResultDto> answerResultDtoList = new ArrayList<>();
+        for (int i = 0; i < boardContentList.size(); i++) {
+            BoardContent boardContents = boardContentList.get(i);
+            Long contentId = boardContents.getId();
+            String content = boardContents.getContent();
+            int answerCount = answerRepository.countAllByBoardContentAndStatus(boardContents, "ACTIVE");
+            int check = 0;
+            Answer answer2 = answerRepository.findAnswerByMemberAndBoardContentAndStatus(member,boardContents,"ACTIVE");
+
+            if(answer2==null){
+                check = 0;
+            }else{
+                check = 1;
+            }
+
+            double percentage = 0.0;
+
+            if (totalAnswerCount != 0) {
+                percentage = ((double) answerCount / (double) totalAnswerCount) * 100;
+                percentage = Math.round((percentage * 100) / 100.0);
+            }
+            AnswerResultDto answerResultDto = new AnswerResultDto(contentId, content,check,percentage);
+            answerResultDtoList.add(answerResultDto);
+        }
+        AnswerResponse answerResponse = new AnswerResponse(answer.getId(),boardId,answerResultDtoList);
+
+        return answerResponse;
     }
 
     @Transactional

@@ -8,6 +8,7 @@ import com.gogo.service.answer.AnswerService;
 import com.gogo.service.answer.dto.request.CreateAnswerRequest;
 import com.gogo.service.answer.dto.request.PatchAnswerRequest;
 import com.gogo.service.answer.dto.response.AnswerInfoResponse;
+import com.gogo.service.answer.dto.response.AnswerResponse;
 import com.gogo.service.answer.dto.response.AnswerResultResponse;
 import com.gogo.service.comment.dto.request.CreateCommentRequest;
 import com.gogo.service.comment.dto.response.CommentInfoResponse;
@@ -26,13 +27,13 @@ public class AnswerController {
     @PostMapping("api/v1/board/{boardId}/answer")
     @Operation(summary = "고민 답변 API",description = "boardId(고민게시글 인덱스), 토큰이 필요합니다, contentId(선택지 인덱스)")
     @ResponseBody
-    public ApiResponse<AnswerInfoResponse> createAnswer(@Valid @RequestBody CreateAnswerRequest createAnswerRequest,
-                                                        @PathVariable Long boardId,
-                                                        @LoginUser Long memberId) {
+    public ApiResponse<AnswerResponse> createAnswer(@Valid @RequestBody CreateAnswerRequest createAnswerRequest,
+                                                    @PathVariable Long boardId,
+                                                    @LoginUser Long memberId) {
         if(createAnswerRequest.getContentId()==null){
             throw new ValidationException("고민에 대한 답변을 선택해주세요.","고민에 대한 답변을 선택해주세요.");
         }
-        return ApiResponse.of(answerService.createAnswer(createAnswerRequest,memberId,boardId));
+        return new ApiResponse("","",answerService.createAnswer(createAnswerRequest,memberId,boardId));
     }
 
 
