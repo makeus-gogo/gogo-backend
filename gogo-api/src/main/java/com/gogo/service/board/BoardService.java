@@ -9,7 +9,6 @@ import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import com.gogo.service.board.dto.response.*;
 import com.gogo.service.hashtag.HashTagService;
-import com.gogo.service.member.MemberServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +33,7 @@ public class BoardService {
     public BoardDetailInfoResponse createBoard(CreateBoardRequest request, Long memberId) {
         Board board = boardRepository.save(request.toEntity(memberId));
         List<String> hashTags = hashTagService.addHashTags(request.getHashTags(), board.getId(), memberId);
-        Member creator = MemberServiceUtils.findMemberById(memberRepository, memberId);
-        return BoardDetailInfoResponse.of(board, hashTags, creator);
+        return BoardDetailInfoResponse.of(board, hashTags);
     }
 
     @Transactional(readOnly = true)
@@ -48,32 +46,18 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardDetailInfoResponse getBoardInfo(Long boardId) {
-        Board board = BoardServiceUtils.findBoardById(boardRepository, boardId);
-        Member creator = MemberServiceUtils.findMemberById(memberRepository, board.getMemberId());
-        List<String> hashTags = hashTagService.retrieveHashTagsInBoard(boardId);
-        return BoardDetailInfoResponse.of(board, hashTags, creator);
-    }
-
-    @Transactional(readOnly = true)
-    public List<BoardInfoResponse> searchBoardsByKeyword(String keyword, Long lastBoardId, int size) {
+    public List<BoardWithCreatorInfoResponse> searchBoardsByKeyword(String keyword, Long lastBoardId, int size) {
         if (StringUtils.isEmpty(keyword)) {
-            return findPaginationBoards(boardRepository, lastBoardId, size);
+            return getBoardsLessThanBoardId(lastBoardId, size);
         }
         return findPaginationBoardsWithKeyword(keyword, lastBoardId, size);
     }
 
-    private List<BoardInfoResponse> findPaginationBoards(BoardRepository boardRepository, Long lastBoardId, int size) {
-        List<Board> boardList = BoardServiceUtils.findBoardsOrderByIdWithPagination(boardRepository, lastBoardId, size);
-        return boardList.stream()
-            .map(BoardInfoResponse::of)
-            .collect(Collectors.toList());
-    }
-
-    private List<BoardInfoResponse> findPaginationBoardsWithKeyword(String keyword, Long lastBoardId, int size) {
+    private List<BoardWithCreatorInfoResponse> findPaginationBoardsWithKeyword(String keyword, Long lastBoardId, int size) {
         List<Board> boardList = BoardServiceUtils.getBoardsByLikeKeyword(boardRepository, keyword, lastBoardId, size);
+        BoardCreatorCollection collection = BoardCreatorCollection.of(memberRepository, boardList);
         return boardList.stream()
-            .map(BoardInfoResponse::of)
+            .map(board -> BoardWithCreatorInfoResponse.of(board, collection.getCreator(board.getMemberId())))
             .collect(Collectors.toList());
     }
 

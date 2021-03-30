@@ -7,7 +7,6 @@ import com.gogo.service.answer.dto.response.AnswerResultResponse;
 import com.gogo.service.board.BoardService;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import com.gogo.service.board.dto.response.BoardDetailInfoResponse;
-import com.gogo.service.board.dto.response.BoardInfoResponse;
 import com.gogo.service.board.dto.response.BoardTop3Response;
 import com.gogo.service.board.dto.response.BoardWithCreatorInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +43,7 @@ public class BoardController {
 
     @Operation(summary = "고민 게시물들을 키워드로 검색하는 API")
     @GetMapping("/api/v1/board/search")
-    public ApiResponse<List<BoardInfoResponse>> searchBoardsByName(@RequestParam(required = false) String keyword, @RequestParam Long lastBoardId, @RequestParam int size) {
+    public ApiResponse<List<BoardWithCreatorInfoResponse>> searchBoardsByName(@RequestParam(required = false) String keyword, @RequestParam Long lastBoardId, @RequestParam int size) {
         return ApiResponse.of(boardService.searchBoardsByKeyword(keyword, lastBoardId, size));
     }
 
