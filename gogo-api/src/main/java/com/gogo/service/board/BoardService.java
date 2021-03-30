@@ -9,6 +9,7 @@ import com.gogo.domain.member.MemberRepository;
 import com.gogo.service.board.dto.request.CreateBoardRequest;
 import com.gogo.service.board.dto.response.*;
 import com.gogo.service.hashtag.HashTagService;
+import com.gogo.service.member.MemberServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,8 @@ public class BoardService {
     public BoardDetailInfoResponse createBoard(CreateBoardRequest request, Long memberId) {
         Board board = boardRepository.save(request.toEntity(memberId));
         List<String> hashTags = hashTagService.addHashTags(request.getHashTags(), board.getId(), memberId);
-        return BoardDetailInfoResponse.of(board, hashTags);
+        Member creator = MemberServiceUtils.findMemberById(memberRepository, memberId);
+        return BoardDetailInfoResponse.of(board, hashTags, creator);
     }
 
     @Transactional(readOnly = true)
@@ -48,8 +50,9 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardDetailInfoResponse getBoardInfo(Long boardId) {
         Board board = BoardServiceUtils.findBoardById(boardRepository, boardId);
+        Member creator = MemberServiceUtils.findMemberById(memberRepository, board.getMemberId());
         List<String> hashTags = hashTagService.retrieveHashTagsInBoard(boardId);
-        return BoardDetailInfoResponse.of(board, hashTags);
+        return BoardDetailInfoResponse.of(board, hashTags, creator);
     }
 
     @Transactional(readOnly = true)

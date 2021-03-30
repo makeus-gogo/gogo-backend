@@ -2,6 +2,8 @@ package com.gogo.service.board.dto.response;
 
 import com.gogo.domain.board.Board;
 import com.gogo.domain.board.BoardType;
+import com.gogo.domain.member.Member;
+import com.gogo.service.member.dto.response.MemberInfoResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +31,16 @@ public class BoardDetailInfoResponse {
 
     private final LocalDateTime endDateTime;
 
+    private final MemberInfoResponse creator;
+
     private final List<BoardContentResponse> contents = new ArrayList<>();
 
     private final List<String> hashTags = new ArrayList<>();
 
-    public static BoardDetailInfoResponse of(Board board, List<String> hashTags) {
+
+    public static BoardDetailInfoResponse of(Board board, List<String> hashTags, Member creator) {
         BoardDetailInfoResponse response = new BoardDetailInfoResponse(board.getId(), board.getDescription(),
-            board.getPictureUrl(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime());
+            board.getPictureUrl(), board.getType(), board.getMemberId(), board.getStartDateTime(), board.getEndDateTime(), MemberInfoResponse.of(creator));
         List<BoardContentResponse> contentResponses = board.getBoardContentList().stream()
             .map(BoardContentResponse::of)
             .collect(Collectors.toList());
