@@ -10,10 +10,11 @@ public class CommentInfoResponse {
     private final Long commentId;
     private final Long boardId;
     private final Long memberId;
+    private final String memberProfileUrl;
     private final String description;
 
     public static CommentInfoResponse of(Comment comment){
         return new CommentInfoResponse(comment.getId(), comment.getBoard().getId(),
-            comment.getMember().getId(),comment.getDescription());
+            comment.getMember().getId(),comment.getMember().getProfileUrl(),comment.getDescription());
     }
 }
